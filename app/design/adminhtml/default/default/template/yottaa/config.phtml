@@ -1,0 +1,252 @@
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo $this->__('Yottaa') ?></h3></td>
+            <td class="a-right">
+                <?php if ($new_yottaa_account): ?>
+                <button onclick="editForm.submit()" class="scalable add" type="button">
+                    <span><?php echo $this->__('Create Account') ?></span>
+                </button>
+                <button onclick="window.location = '<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/system_config/edit/section/yottaa/") ?>'"
+                        class="scalable add" type="button"><span><?php echo $this->__('Add Existing Account') ?></span>
+                </button>
+                <?php else: ?>
+                <button onclick="window.location = '<?php echo Mage::helper("adminhtml")->getUrl("adminhtml/system_config/edit/section/yottaa/") ?>'"
+                        class="scalable save"
+                        type="button"><span><?php echo $this->__('Advanced Configuration') ?></span>
+                <?php endif?>
+            </td>
+        </tr>
+    </table>
+</div>
+<?php if ($new_yottaa_account): ?>
+    <form id="edit_form" name="edit_form" method="post" action="<?php echo $this->getUrl('*/*/post')?>">
+        <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
+
+        <div class="entry-edit">
+            <div class="section-config">
+                <div class="entry-edit-head">
+                    <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Setup New Yottaa Account') ?></h4>
+                </div>
+                <fieldset id="advanced-settings-fieldset">
+                    <?php if ($new_yottaa_account): ?>
+                    <table cellspacing="0" class="form-list">
+                        <tr>
+                            <td class="label"><?php echo $this->__('User Name') ?> <span class="required">*</span></td>
+                            <td class="input-ele"><input class="input-text required-entry" name="yottaa_user_name" size="60"
+                                                         value="<?php echo Mage::getSingleton('admin/session')->getUser()->getName()?>"/>
+
+                                <p class="note">
+                                    <span>Enter the full user name for your new Yottaa account.</span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo $this->__('Phone') ?> <span class="required">*</span></td>
+                            <td class="input-ele"><input class="input-text required-entry" name="yottaa_user_phone"
+                                                         size="60"/>
+
+                                <p class="note">
+                                    <span>Enter the phone number for your new Yottaa account.</span>
+                                </p>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo $this->__('Email') ?> <span class="required">*</span></td>
+                            <td class="input-ele"><input class="input-text required-entry" name="yottaa_user_email"
+                                                         size="60"
+                                                         value="<?php echo Mage::getSingleton('admin/session')->getUser()->getEmail()?>"/>
+
+                                <p class="note">
+                                    <span>Enter the email for your new Yottaa account.</span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label"><?php echo $this->__('Site Name') ?> <span class="required">*</span></td>
+                            <td class="input-ele"><input class="input-text required-entry" name="yottaa_site_name" size="60"
+                                                         value="<?php  echo Mage::app()->getFrontController()->getRequest()->getHttpHost()?>"/>
+
+                                <p class="note">
+                                    <span>Enter the site name for your new Yottaa account.</span>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                    <?php else: ?>
+                    <?php endif?>
+                </fieldset>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        var editForm = new varienForm('edit_form');
+    </script>
+<?php else: ?>
+    <div class="entry-edit">
+        <div class="section-config">
+            <div class="entry-edit-head">
+                <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Status') ?></h4>
+            </div>
+            <fieldset class="">
+                <?php if ($yottaa_status == 'error'): ?>
+                    <fieldset class="a-center bold error">
+                        <div>Error : <?php echo $yottaa_status_error ?></div>
+                    </fieldset>
+                <?php else: ?>
+                    <?php if ($yottaa_status == 'preview'): ?>
+                        <div>
+                            Your site is currently in <strong class="status-preview error">Preview</strong>.
+                        </div>
+                        <ul class="messages">
+                            <li class="notice-msg">
+                                <ul>
+                                    <li>
+                                        This allows you to access an optimized
+                                        version of your website using the <a href="<?php echo $yottaa_preview_url ?>"
+                                                                             target="_blank">preview URL</a>.
+                                        Before making your site live look over the links and configuration below.
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    <?php endif ?>
+                    <?php if ($yottaa_status == 'live'): ?>
+                        <div>
+                            Your site is currently in <strong class="status-live" style="color:#3D6611;">Live</strong>.
+                        </div>
+                    <?php endif ?>
+                    <?php if ($yottaa_status == 'paused'): ?>
+                        <div>
+                            Your site is currently in <strong class="status-paused notice">Paused</strong>.
+                        </div>
+                    <?php endif ?>
+
+                <?php endif ?>
+            </fieldset>
+        </div>
+        <div class="section-config">
+            <div class="entry-edit-head">
+                <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Links') ?></h4>
+            </div>
+            <fieldset class="">
+                <div>
+                    <a href="https://apps.yottaa.com/" target="_blank">Yottaa Dashboard</a>
+                </div>
+                <div><a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/optimizer"
+                        target="_blank">Yottaa Site Overview</a>
+                </div>
+                <div>
+                    <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings"
+                       target="_blank">Yottaa Optimization Configuration</a>
+                </div>
+            </fieldset>
+        </div>
+        <div class="section-config">
+            <div class="entry-edit-head">
+                <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Actions') ?></h4>
+            </div>
+            <form id="actions_form" name="actions_form" method="post"
+                  action="<?php echo $this->getUrl('*/*/postActions')?>">
+                <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
+                <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
+                <fieldset class="config">
+                    <table class="form-list" cellspacing="0">
+                        <colgroup class=""></colgroup>
+                        <tbody>
+                        <tr>
+                            <?php if ($yottaa_status == 'paused'): ?>
+                            <td class="">
+                                <button onclick="" class="scalable save" type="button">
+                                    <span><?php echo $this->__('Resume Optimizations') ?></span>
+                                </button>
+                                <input name="yottaa_action_key" type="hidden" value="resume"/>
+                                <p class="note">
+                                    Starting optimization will apply optimizations on your website within 5 minutes.
+                                </p>
+                            </td>
+                            <?php endif ?>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </form>
+            <script type="text/javascript">
+                var actionsForm = new varienForm('actions_form');
+            </script>
+        </div>
+        <div class="section-config">
+            <div class="entry-edit-head">
+                <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Settings') ?></h4>
+                <div class="f-right">
+                    <button onclick="editSettingsForm.submit()" class="scalable save" type="button">
+                        <span><?php echo $this->__('Save Settings') ?></span>
+                    </button>
+                </div>
+            </div>
+            <form id="edit_settings_form" name="edit_settings_form" method="post" action="<?php echo $this->getUrl('*/*/postSettings')?>">
+                <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
+            <fieldset class="config">
+                <table class="form-list" cellspacing="0">
+                    <colgroup class="label"></colgroup>
+                    <colgroup class="value"></colgroup>
+                    <tbody>
+                    <tr>
+                        <td class="label">
+                            <label for="yottaa_yottaa_group_yottaa_user_id"> User Id:</label>
+                        </td>
+                        <td class="value">
+                            <span id="yottaa_yottaa_group_yottaa_user_id"><?php echo $yottaa_user_id ?></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <label for="yottaa_yottaa_group_yottaa_api_key"> API Key: </label>
+                        </td>
+                        <td class="value">
+                            <span id="yottaa_yottaa_group_yottaa_api_key"><?php echo $yottaa_api_key ?></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <label for="yottaa_yottaa_group_yottaa_site_id"> Site Id: </label>
+                        </td>
+                        <td class="value">
+                            <span id="yottaa_yottaa_group_yottaa_site_id"><?php echo $yottaa_site_id ?></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <label for="yottaa_yottaa_group_yottaa_auto_clear_cache"> Auto Clear Cache:</label>
+                        </td>
+                        <td class="value">
+                            <select id="yottaa_yottaa_group_yottaa_auto_clear_cache" class=" select"
+                                   name="yottaa_auto_clear_cache">
+                                <option <?php if ($yottaa_auto_clear_cache == 1): ?>selected="selected"<?php endif ?> value="1">Yes</option>
+                                <option <?php if ($yottaa_auto_clear_cache == 0): ?>selected="selected"<?php endif ?> value="0">No</option>
+                            </select>
+                            <p class="note">
+                                <span>Automatically clear Yottaa's site optimizer cache on changes.</span>
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+            </form>
+            <script type="text/javascript">
+                var editSettingsForm = new varienForm('edit_settings_form');
+            </script>
+        </div>
+        <div class="section-config">
+            <div class="entry-edit-head">
+                <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Checklist') ?></h4>
+            </div>
+            <fieldset class="">
+
+            </fieldset>
+        </div>
+    </div>
+<?php endif ?>

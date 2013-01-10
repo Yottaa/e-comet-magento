@@ -1,0 +1,62 @@
+<project name="yottaa.magento" default="dev">
+
+    <property file="custom-build.properties"/>
+
+    <property file="build.properties"/>
+
+    <property name="project.dir" value="."/>
+
+    <property name="yottaa.company.id" value="Yottaa"/>
+    <property name="yottaa.module.id" value="Yottaa"/>
+
+    <property name="app.dir" value="${project.dir}/app"/>
+
+    <property name="build.dir" value="${project.dir}/build"/>
+
+    <target name="clean">
+        <delete>
+            <fileset dir="${build.dir}" includes="**/*"/>
+        </delete>
+    </target>
+
+    <target name="clear-cache">
+        <delete>
+            <fileset dir="${magento.location}/var/cache" includes="**/*"/>
+            <fileset dir="${magento.location}/var/session" includes="**/*"/>
+        </delete>
+    </target>
+
+    <target name="dev" depends="clear-cache">
+        <copy todir="${magento.location}/app" verbose="true">
+            <fileset dir="${app.dir}"/>
+        </copy>
+    </target>
+
+    <target name="unpublish">
+        <sshexec host="${scp.magento.host}"
+                 username="${scp.magento.username}"
+                 password="${scp.magento.password}"
+                 trust="true"
+                 command="rm -r ${scp.magento.basepath}/app/code/local/${yottaa.company.id}/${yottaa.module.id}/*"
+                 failonerror="false"/>
+        <sshexec host="${scp.magento.host}"
+                 username="${scp.magento.username}"
+                 password="${scp.magento.password}"
+                 trust="true"
+                 command="rm -r ${scp.magento.basepath}/app/etc/modules/${yottaa.company.id}_${yottaa.module.id}.xml"
+                 failonerror="false"/>
+    </target>
+
+    <target name="publish" depends="unpublish">
+        <scp todir="${scp.magento.username}@${scp.magento.host}:${scp.magento.basepath}/app"
+             password="${scp.magento.password}"
+             trust="true"
+             verbose="true"
+             failonerror="true">
+            <fileset dir="${app.dir}">
+                <include name="**/*"/>
+            </fileset>
+        </scp>
+    </target>
+
+</project>

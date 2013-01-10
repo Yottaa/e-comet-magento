@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_yottaa_index>
+        <update handle="yottaa_index"/>
+        <reference name="content">
+            <block type="adminhtml/template" name="config" template="yottaa/config.phtml"/>
+        </reference>
+    </adminhtml_yottaa_index>
+</layout>

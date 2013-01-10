@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Yottaa_Yottaa>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Yottaa_Yottaa>
+    </modules>
+</config>
