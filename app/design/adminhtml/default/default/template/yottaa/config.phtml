@@ -159,7 +159,7 @@
                         <tr>
                             <?php if ($yottaa_status == 'paused'): ?>
                             <td class="">
-                                <button onclick="" class="scalable save" type="button">
+                                <button onclick="actionsForm.submit()" class="scalable save" type="button">
                                     <span><?php echo $this->__('Resume Optimizations') ?></span>
                                 </button>
                                 <input name="yottaa_action_key" type="hidden" value="resume"/>
@@ -168,6 +168,28 @@
                                 </p>
                             </td>
                             <?php endif ?>
+                            <?php if ($yottaa_status == 'live'): ?>
+                            <td class="">
+                                <button onclick="actionsForm.submit()" class="scalable save" type="button">
+                                    <span><?php echo $this->__('Pause Optimizations') ?></span>
+                                </button>
+                                <input name="yottaa_action_key" type="hidden" value="pause"/>
+                                <p class="note">
+                                    Activating your site allows all e-commerce visitors to receive the benefits out Yottaa's site speed optimizer.
+                                </p>
+                            </td>
+                            <?php endif ?>
+                        </tr>
+                        <tr>
+                            <td class="">
+                                <button onclick="actionsForm.submit()" class="scalable save" type="button">
+                                    <span><?php echo $this->__('Clear Cache') ?></span>
+                                </button>
+                                <input name="yottaa_action_key" type="hidden" value="clear_cache"/>
+                                <p class="note">
+                                    Clearing the cache will remove all of your sites resources from our CDN. Use this option if you have updated a resource (gif, css, JavaScript).
+                                </p>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

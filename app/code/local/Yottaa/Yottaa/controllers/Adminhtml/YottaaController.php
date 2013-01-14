@@ -456,5 +456,45 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
         $this->_redirect('*/*');
     }
 
+    public function postActionsAction()
+    {
+        $post = $this->getRequest()->getPost();
+        try {
+            if (empty($post)) {
+                Mage::throwException($this->__('Invalid form data.'));
+            }
 
+            $yottaa_action_key = $post['yottaa_action_key'];
+
+            if ($yottaa_action_key == 'resume') {
+                $json_output = $this->resume_yottaa_optimizer();
+                if (!isset($json_output["error"])) {
+                    Mage::getSingleton('adminhtml/session')->addSuccess('Your Yottaa optimizer has been resumed.');
+                } else {
+                    $error = $json_output["error"];
+                    Mage::getSingleton('adminhtml/session')->addError('Error received from resuming Yottaa optimizer:' . json_encode($error));
+                }
+            } else if ($yottaa_action_key == 'pause') {
+                $json_output = $this->pause_yottaa_optimizer();
+                if (!isset($json_output["error"])) {
+                    Mage::getSingleton('adminhtml/session')->addSuccess('Your Yottaa optimizer has been paused.');
+                } else {
+                    $error = $json_output["error"];
+                    Mage::getSingleton('adminhtml/session')->addError('Error received from pausing Yottaa optimizer:' . json_encode($error));
+                }
+            } else if ($yottaa_action_key == 'clear_cache') {
+                $json_output = $this->flush_yottaa_cache();
+                if (!isset($json_output["error"])) {
+                    Mage::getSingleton('adminhtml/session')->addSuccess('Your Yottaa cache has been cleared.');
+                } else {
+                    $error = $json_output["error"];
+                    Mage::getSingleton('adminhtml/session')->addError('Error received from clearing Yottaa cache:' . json_encode($error));
+                }
+            }
+
+        } catch (Exception $e) {
+            Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+        }
+        $this->_redirect('*/*');
+    }
 }
