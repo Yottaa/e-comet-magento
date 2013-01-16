@@ -15,6 +15,17 @@
                 <class>Yottaa_Yottaa_Helper</class>
             </yottaa_yottaa>
         </helpers>
+        <events>
+            <catalog_product_save_after>
+                <observers>
+                    <yottaa_yottaa_product_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <method>catalog_product_save_after</method>
+                    </yottaa_yottaa_product_observer>
+                </observers>
+            </catalog_product_save_after>
+        </events>
     </global>
     <admin>
         <routers>
