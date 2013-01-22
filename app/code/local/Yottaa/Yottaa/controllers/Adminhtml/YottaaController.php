@@ -78,7 +78,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
         $yottaa_api_key = Mage::getStoreConfig('yottaa/yottaa_group/yottaa_api_key');
         $yottaa_site_id = Mage::getStoreConfig('yottaa/yottaa_group/yottaa_site_id');
         $output = $helper->curl_post_async("https://api.yottaa.com/sites/" . $yottaa_site_id . "/settings", array("user_id" => $yottaa_user_id), "GET", $yottaa_api_key);
-        return $helper->post_processing_settings(json_decode($this->parseHttpResponse($output), true));
+        return $this->post_processing_settings(json_decode($helper->parseHttpResponse($output), true));
     }
 
     /**
@@ -92,7 +92,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
         $yottaa_user_id = Mage::getStoreConfig('yottaa/yottaa_group/yottaa_user_id');
         $yottaa_api_key = Mage::getStoreConfig('yottaa/yottaa_group/yottaa_api_key');
         $yottaa_site_id = Mage::getStoreConfig('yottaa/yottaa_group/yottaa_site_id');
-        $output = $helper->curl_post_async("https://api.yottaa.com/optimizers/" . $yottaa_site_id . "/flush_cache", array("user_id" => $yottaa_user_id), "PUT", $yottaa_api_key);
+        $output = $helper->curl_post_async("https://api.yottaa.com/sites/" . $yottaa_site_id . "/flush_cache", array("user_id" => $yottaa_user_id), "PUT", $yottaa_api_key);
         return json_decode($helper->parseHttpResponse($output), true);
     }
 
@@ -107,20 +107,15 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
     {
         if (!isset($json_output["error"])) {
 
-            $site_pages_key = "/";
-            $configure_pages_key1 = "admin/config";
-            $configure_pages_key2 = "admin%252Fconfig";
-            $edit_pages_key = "/edit";
+            $site_pages_key = ".html";
+            $admin_pages_key = "/admin";
+            $checkout_pages_key = "/checkout";
 
             $site_pages_caching = 'unknown';
-            $edit_pages_caching = 'unknown';
-            $configure_pages_caching = 'unknown';
-            $configure_pages_caching1 = 'unknown';
-            $configure_pages_caching2 = 'unknown';
+            $admin_pages_caching = 'unknown';
+            $checkout_pages_caching = 'unknown';
 
             $exclusions = '';
-
-            $excluded_sess_cookie = 'unknown';
 
             if (isset($json_output["defaultActions"]) && isset($json_output["defaultActions"]["resourceActions"]) && isset($json_output["defaultActions"]["resourceActions"]["htmlCache"])) {
                 $html_cachings = $json_output["defaultActions"]["resourceActions"]["htmlCache"];
@@ -136,26 +131,13 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                                         if ($match["condition"] == $site_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
                                             $site_pages_caching = $direction;
                                         }
-                                        if ($match["name"] == "Request-Header" && $match["header_name"] == "Cookie" && $match["condition"] == "SESS" && $match["type"] == "0" && $match["operator"] == "NOT-CONTAIN") {
-                                            $excluded_sess_cookie = "set";
+                                        if ($match["condition"] == $admin_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
+                                            $admin_pages_caching = $direction;
                                         }
-                                        if ($match["condition"] == $edit_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
-                                            $edit_pages_caching = $direction;
-                                        }
-                                        if ($match["condition"] == $configure_pages_key1 && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
-                                            $configure_pages_caching1 = $direction;
-                                        }
-                                        if ($match["condition"] == $configure_pages_key2 && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
-                                            $configure_pages_caching2 = $direction;
+                                        if ($match["condition"] == $checkout_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
+                                            $checkout_pages_caching = $direction;
                                         }
                                     }
-                                }
-                                if ($configure_pages_caching1 == "excluded" && $configure_pages_caching2 == "excluded") {
-                                    $configure_pages_caching = "excluded";
-                                }
-                                if ($site_pages_caching == "unknown" || $excluded_sess_cookie != "set") {
-                                    $site_pages_caching = "unknown";
-                                    $excluded_sess_cookie = "unknown";
                                 }
                             }
                         }
@@ -183,8 +165,8 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
             }
 
             return array('site_pages_caching' => $site_pages_caching,
-                         'edit_pages_caching' => $edit_pages_caching,
-                         'configure_pages_caching' => $configure_pages_caching,
+                         'admin_pages_caching' => $admin_pages_caching,
+                         'checkout_pages_caching' => $checkout_pages_caching,
                          'exclusions' => $exclusions);
         } else {
             return $json_output;
@@ -238,6 +220,19 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                 $error = $json_output["error"];
                 $config->assign('yottaa_status', 'error');
                 $config->assign('yottaa_status_error', json_encode($error));
+            }
+
+            $json_output2 = $this->retrieve_yottaa_settings();
+
+            if (!isset($json_output2["error"])) {
+                $config->assign('yottaa_settings_status', 'ok');
+                $config->assign('yottaa_settings_site_pages_caching', $json_output2["site_pages_caching"]);
+                $config->assign('yottaa_settings_admin_pages_caching', $json_output2["admin_pages_caching"]);
+                $config->assign('yottaa_settings_checkout_pages_caching', $json_output2["checkout_pages_caching"]);
+            } else {
+                $error = $json_output2["error"];
+                $config->assign('yottaa_settings_status', 'error');
+                $config->assign('yottaa_settings_status_error', json_encode($error));
             }
         }
         $config->assign('new_yottaa_account', $new_yottaa_account);
@@ -342,7 +337,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                 }
             } else if ($yottaa_action_key == 'clear_cache') {
                 $json_output = $this->flush_yottaa_cache();
-                Mage::log("Ouput from flushing cache :" . $json_output);
+                Mage::log("Output from flushing cache :" . json_encode($json_output));
                 if (!isset($json_output["error"])) {
                     Mage::getSingleton('adminhtml/session')->addSuccess('Your Yottaa cache has been cleared.');
                 } else {

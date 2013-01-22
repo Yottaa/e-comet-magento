@@ -197,7 +197,7 @@
                         <tr>
                             <td class="">
                                 <button onclick="clearCacheForm.submit()" class="scalable save" type="button">
-                                    <span><?php echo $this->__('Clear Cache') ?></span>
+                                    <span><?php echo $this->__('Clear Yottaa Cache') ?></span>
                                 </button>
                                 <input name="yottaa_action_key" type="hidden" value="clear_cache"/>
 
@@ -303,9 +303,63 @@
         <div class="entry-edit-head">
             <h4 class="icon-head head-edit-form fieldset-legend"><?php echo $this->__('Checklist') ?></h4>
         </div>
-        <fieldset class="">
-
-        </fieldset>
+        <?php if ($yottaa_settings_status == 'error'): ?>
+            <fieldset class="a-center bold error">
+                <div>Error : <?php echo $yottaa_settings_status_error ?></div>
+            </fieldset>
+        <?php else: ?>
+            <fieldset class="config">
+                <table class="form-list" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="value">
+                            <label for="yottaa_yottaa_group_settings_site_pages_caching">Enable frontend page caching:</label>
+                        </td>
+                        <td class="value">
+                            <?php if ($yottaa_settings_site_pages_caching == 'included'): ?>
+                                <strong id="yottaa_yottaa_group_settings_site_pages_caching" style="color:#3D6611;">Passed</strong>
+                            <?php else: ?>
+                                <strong id="yottaa_yottaa_group_settings_site_pages_caching" class="error">Failed</strong>
+                                <p class="note">
+                                    <span>Add an exception into the <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings?tab=1" target="_blank">HTML Caching</a> which includes resource from optimization if URI contains ".html".</span>
+                                </p>
+                            <?php endif ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="value">
+                            <label for="yottaa_yottaa_group_settings_admin_pages_caching">Exclude admin pages from caching:</label>
+                        </td>
+                        <td class="value">
+                            <?php if ($yottaa_settings_admin_pages_caching == 'excluded'): ?>
+                                <strong id="yottaa_yottaa_group_settings_admin_pages_caching" style="color:#3D6611;">Passed</strong>
+                            <?php else: ?>
+                                <strong id="yottaa_yottaa_group_settings_admin_pages_caching" class="error">Failed</strong>
+                                <p class="note">
+                                    <span>Add an exception into the <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings?tab=1" target="_blank">HTML Caching</a> which excludes resource from optimization if URI contains "/admin".</span>
+                                </p>
+                            <?php endif ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="value">
+                            <label for="yottaa_yottaa_group_settings_checkout_pages_caching">Exclude checkout pages from caching:</label>
+                        </td>
+                        <td class="value">
+                            <?php if ($yottaa_settings_checkout_pages_caching == 'excluded'): ?>
+                                <strong id="yottaa_yottaa_group_settings_checkout_pages_caching" style="color:#3D6611;">Passed</strong>
+                            <?php else: ?>
+                                <strong id="yottaa_yottaa_group_settings_checkout_pages_caching" class="error">Failed</strong>
+                                <p class="note">
+                                    <span>Add an exception into the <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings?tab=1" target="_blank">HTML Caching</a> which excludes resource from optimization if URI contains "/checkout".</span>
+                                </p>
+                            <?php endif ?>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        <?php endif ?>
     </div>
 </div>
 <?php endif ?>

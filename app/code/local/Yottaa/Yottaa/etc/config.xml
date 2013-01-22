@@ -25,7 +25,46 @@
                     </yottaa_yottaa_product_observer>
                 </observers>
             </catalog_product_save_after>
+            <checkout_cart_save_after>
+                <observers>
+                    <yottaa_yottaa_cart_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <method>checkout_cart_save_after</method>
+                    </yottaa_yottaa_cart_observer>
+                </observers>
+            </checkout_cart_save_after>
+            <customer_login>
+                <observers>
+                    <yottaa_yottaa_customer_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <method>customer_login_logout</method>
+                    </yottaa_yottaa_customer_observer>
+                </observers>
+            </customer_login>
+            <customer_logout>
+                <observers>
+                    <yottaa_yottaa_customer_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <method>customer_login_logout</method>
+                    </yottaa_yottaa_customer_observer>
+                </observers>
+            </customer_logout>
+            <core_session_abstract_add_message>
+                <observers>
+                    <yottaa_yottaa_cart_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <method>core_session_abstract_add_message</method>
+                    </yottaa_yottaa_cart_observer>
+                </observers>
+            </core_session_abstract_add_message>
         </events>
+        <remote_addr_headers><!-- list headers that contain real client IP if webserver is behind a reverse proxy -->
+            <header1>HTTP_X_FORWARDED_FOR</header1>
+        </remote_addr_headers>
     </global>
     <admin>
         <routers>

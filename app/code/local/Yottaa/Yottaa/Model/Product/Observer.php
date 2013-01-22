@@ -17,7 +17,7 @@ class Yottaa_Yottaa_Model_Product_Observer
         $yottaa_user_id = Mage::getStoreConfig('yottaa/yottaa_group/yottaa_user_id');
         $yottaa_api_key = Mage::getStoreConfig('yottaa/yottaa_group/yottaa_api_key');
         $yottaa_site_id = Mage::getStoreConfig('yottaa/yottaa_group/yottaa_site_id');
-        $output = $helper->curl_post_async("https://api.yottaa.com/optimizers/" . $yottaa_site_id . "/flush_cache", array("user_id" => $yottaa_user_id), "PUT", $yottaa_api_key);
+        $output = $helper->curl_post_async("https://api.yottaa.com/sites/" . $yottaa_site_id . "/flush_cache", array("user_id" => $yottaa_user_id), "PUT", $yottaa_api_key);
         return json_decode($helper->parseHttpResponse($output), true);
     }
 
@@ -61,6 +61,64 @@ class Yottaa_Yottaa_Model_Product_Observer
         Mage::log($message);
 
         $this->auto_flush_yottaa_cache($product);
+
+        return $this;
+    }
+
+    /**
+     * Triggers Yottaa cache refreshing
+     *
+     * @param   Varien_Event_Observer $observer
+     * @return  Yottaa_Yottaa_Model_Product_Observer
+     */
+    public function checkout_cart_save_after($observer)
+    {
+        $event = $observer->getEvent();
+        $cart = $event->getCart();
+
+        $message = "Cart save event captured.";
+        Mage::log($message);
+
+        $this->auto_flush_yottaa_cache($cart);
+
+        return $this;
+    }
+
+    /**
+     * Triggers Yottaa cache refreshing
+     *
+     * @param   Varien_Event_Observer $observer
+     * @return  Yottaa_Yottaa_Model_Product_Observer
+     */
+    public function customer_login_logout($observer)
+    {
+        $event = $observer->getEvent();
+        $customer = $event->getCustomer();
+
+        $message = "Customer login/logout event captured.";
+        Mage::log($message);
+
+        $this->auto_flush_yottaa_cache($customer);
+
+        return $this;
+    }
+
+    /**
+     * Triggers Yottaa cache refreshing
+     *
+     * @param   Varien_Event_Observer $observer
+     * @return  Yottaa_Yottaa_Model_Product_Observer
+     */
+    public function core_session_abstract_add_message($observer)
+    {
+        $event = $observer->getEvent();
+
+        $message = "Add message event captured.";
+        Mage::log($message);
+
+        if ( Mage::getSingleton('catalog/session')->getMessages()->count() > 0 ) {
+            $this->auto_flush_yottaa_cache($event);
+        }
 
         return $this;
     }
