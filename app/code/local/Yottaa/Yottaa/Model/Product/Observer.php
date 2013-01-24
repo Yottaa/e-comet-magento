@@ -122,4 +122,22 @@ class Yottaa_Yottaa_Model_Product_Observer
 
         return $this;
     }
+
+    /**
+     * Triggers Yottaa cache refreshing
+     *
+     * @param   Varien_Event_Observer $observer
+     * @return  Yottaa_Yottaa_Model_Product_Observer
+     */
+    public function wishlist_items_renewed($observer)
+    {
+        $event = $observer->getEvent();
+
+        $message = "Wishlist items renewed event captured.";
+        Mage::log($message);
+
+        $this->auto_flush_yottaa_cache($event);
+
+        return $this;
+    }
 }

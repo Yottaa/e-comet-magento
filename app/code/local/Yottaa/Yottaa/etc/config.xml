@@ -61,6 +61,15 @@
                     </yottaa_yottaa_cart_observer>
                 </observers>
             </core_session_abstract_add_message>
+            <wishlist_items_renewed>
+                <observers>
+                    <yottaa_yottaa_wishlist_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <method>wishlist_items_renewed</method>
+                    </yottaa_yottaa_wishlist_observer>
+                </observers>
+            </wishlist_items_renewed>
         </events>
         <remote_addr_headers><!-- list headers that contain real client IP if webserver is behind a reverse proxy -->
             <header1>HTTP_X_FORWARDED_FOR</header1>
