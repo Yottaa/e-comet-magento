@@ -313,6 +313,21 @@
                     <tbody>
                     <tr>
                         <td class="value">
+                            <label for="yottaa_yottaa_group_settings_home_page_caching">Enable home page caching:</label>
+                        </td>
+                        <td class="value">
+                            <?php if ($yottaa_settings_home_page_caching == 'included'): ?>
+                                <strong id="yottaa_yottaa_group_settings_home_page_caching" style="color:#3D6611;">Passed</strong>
+                            <?php else: ?>
+                                <strong id="yottaa_yottaa_group_settings_home_page_caching" class="error">Failed</strong>
+                                <p class="note">
+                                    <span>Enable home page caching rule of the <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings?tab=1" target="_blank">HTML Caching</a>.</span>
+                                </p>
+                            <?php endif ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="value">
                             <label for="yottaa_yottaa_group_settings_site_pages_caching">Enable frontend page caching:</label>
                         </td>
                         <td class="value">

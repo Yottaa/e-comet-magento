@@ -111,6 +111,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
             $admin_pages_key = "/admin";
             $checkout_pages_key = "/checkout";
 
+            $home_page_caching = 'unknown';
             $site_pages_caching = 'unknown';
             $admin_pages_caching = 'unknown';
             $checkout_pages_caching = 'unknown';
@@ -164,7 +165,19 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                 }
             }
 
-            return array('site_pages_caching' => $site_pages_caching,
+            if (isset($json_output["resourceRules"])) {
+                $resourceRules = $json_output["resourceRules"];
+                foreach ($resourceRules as &$resourceRule) {
+                    if (isset($resourceRule["special_type"]) && $resourceRule["special_type"] == "home") {
+                        if ($resourceRule["enabled"]) {
+                            $home_page_caching = 'included';
+                        }
+                    }
+                }
+            }
+
+            return array('home_page_caching' => $home_page_caching,
+                         'site_pages_caching' => $site_pages_caching,
                          'admin_pages_caching' => $admin_pages_caching,
                          'checkout_pages_caching' => $checkout_pages_caching,
                          'exclusions' => $exclusions);
@@ -226,6 +239,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
 
             if (!isset($json_output2["error"])) {
                 $config->assign('yottaa_settings_status', 'ok');
+                $config->assign('yottaa_settings_home_page_caching', $json_output2["home_page_caching"]);
                 $config->assign('yottaa_settings_site_pages_caching', $json_output2["site_pages_caching"]);
                 $config->assign('yottaa_settings_admin_pages_caching', $json_output2["admin_pages_caching"]);
                 $config->assign('yottaa_settings_checkout_pages_caching', $json_output2["checkout_pages_caching"]);
