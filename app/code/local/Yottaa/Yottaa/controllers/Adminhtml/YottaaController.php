@@ -243,6 +243,13 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                 $config->assign('yottaa_settings_site_pages_caching', $json_output2["site_pages_caching"]);
                 $config->assign('yottaa_settings_admin_pages_caching', $json_output2["admin_pages_caching"]);
                 $config->assign('yottaa_settings_checkout_pages_caching', $json_output2["checkout_pages_caching"]);
+
+                if (strrpos($json_output2["exclusions"],'/admin') === false) {
+                    $config->assign('yottaa_settings_admin_pages_optimization', 'unknown');
+                } else {
+                    $config->assign('yottaa_settings_admin_pages_optimization', 'excluded');
+                }
+
             } else {
                 $error = $json_output2["error"];
                 $config->assign('yottaa_settings_status', 'error');

@@ -351,7 +351,7 @@
                             <?php else: ?>
                                 <strong id="yottaa_yottaa_group_settings_admin_pages_caching" class="error">Failed</strong>
                                 <p class="note">
-                                    <span>Add an exception into the <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings?tab=1" target="_blank">HTML Caching</a> which excludes resource from optimization if URI contains "/admin".</span>
+                                    <span>Add an exception into the <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings?tab=1" target="_blank">HTML Caching</a> which excludes resource from HTML caching if URI contains "/admin".</span>
                                 </p>
                             <?php endif ?>
                         </td>
@@ -366,7 +366,22 @@
                             <?php else: ?>
                                 <strong id="yottaa_yottaa_group_settings_checkout_pages_caching" class="error">Failed</strong>
                                 <p class="note">
-                                    <span>Add an exception into the <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings?tab=1" target="_blank">HTML Caching</a> which excludes resource from optimization if URI contains "/checkout".</span>
+                                    <span>Add an exception into the <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings?tab=1" target="_blank">HTML Caching</a> which excludes resource from HTML caching if URI contains "/checkout".</span>
+                                </p>
+                            <?php endif ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="value">
+                            <label for="yottaa_yottaa_group_settings_admin_pages_optimization">Exclude admin pages from optimization:</label>
+                        </td>
+                        <td class="value">
+                            <?php if ($yottaa_settings_admin_pages_optimization == 'excluded'): ?>
+                                <strong id="yottaa_yottaa_group_settings_admin_pages_optimization" style="color:#3D6611;">Passed</strong>
+                            <?php else: ?>
+                                <strong id="yottaa_yottaa_group_settings_admin_pages_optimization" class="error">Failed</strong>
+                                <p class="note">
+                                    <span>Add an exception into the <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings?tab=1" target="_blank">Optimization Settings</a> which excludes resource from optimization if URI contains "/admin".</span>
                                 </p>
                             <?php endif ?>
                         </td>
