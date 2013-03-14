@@ -285,6 +285,8 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
 
                 $message = $this->__('New Yottaa account has been created with ') . '<a href="' . $preview_url . '">preview url</a>.';
 
+                $message2 = $this->__('Your Yottaa login information has been sent to your email address ') . $yottaa_user_email .'.';
+
                 Mage::getModel('core/config')->saveConfig('yottaa/yottaa_group/yottaa_user_id', $user_id);
                 Mage::getModel('core/config')->saveConfig('yottaa/yottaa_group/yottaa_site_id', $site_id);
                 Mage::getModel('core/config')->saveConfig('yottaa/yottaa_group/yottaa_api_key', $api_key);
@@ -293,6 +295,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
 
                 Mage::getSingleton('adminhtml/session')->addSuccess($message);
 
+                Mage::getSingleton('adminhtml/session')->addSuccess($message2);
             } else {
                 $error = $json_output["error"];
                 Mage::getSingleton('adminhtml/session')->addError('Error received from creating Yottaa user:' . json_encode($error));
