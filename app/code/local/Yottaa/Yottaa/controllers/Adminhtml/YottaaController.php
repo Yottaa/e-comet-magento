@@ -17,7 +17,9 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
         $user_id = '4d34f75b74b1553ba500007f';
         $api_key = '455df7500258012f663b12313d145ceb';
         list($first_name, $last_name) = explode(" ", $full_name);
+        Mage::log("Creating new Yottaa acount with :" . $full_name . ' ' . $email . ' ' . $phone . ' ' . $site);
         $output = $helper->curl_post_async("https://api.yottaa.com/partners/" . $user_id . "/accounts", array("first_name" => $first_name, "last_name" => $last_name, "email" => $email, "phone" => $phone, "site" => $site), "POST", $api_key);
+        Mage::log("New Yottaa acount with :" . json_encode($output));
         return json_decode($helper->parseHttpResponse($output), true);
     }
 
