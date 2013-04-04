@@ -31,6 +31,14 @@
         <mkdir dir="${dist.dir}"/>
     </target>
 
+    <target name="package" depends="clean, setup">
+	   <!-- zip up a distribution that we can ship over -->
+	   <zip destfile="${dist.dir}/dist.zip">
+           <fileset dir="${app.dir}">
+           </fileset>
+	   </zip>
+    </target>
+
     <target name="dev" depends="clear-cache">
         <copy todir="${magento.location}/app" verbose="true">
             <fileset dir="${app.dir}"/>
