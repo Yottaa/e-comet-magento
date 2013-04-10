@@ -396,7 +396,7 @@
                             <?php else: ?>
                                 <strong id="yottaa_yottaa_group_settings_only_cache_anonymous_users" class="error">Failed</strong>
                                 <p class="note">
-                                    <span>Add an exception into the <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings?tab=1" target="_blank">Optimization Settings</a> which which excludes resource from optimization if URI contains "/" and Request-Header whose name equals to "Cookie" and whose value equals "EXTERNAL_NO_YOTTAA_CACHE".</span>
+                                    <span>Add an exception into the <a href="https://apps.yottaa.com/framework/web/sites/<?php echo $yottaa_site_id ?>/settings?tab=1" target="_blank">Optimization Settings</a> which which excludes resource from optimization if URI contains "/" and Request-Header whose name equals to "Cookie" and whose value contains "EXTERNAL_NO_YOTTAA_CACHE".</span>
                                 </p>
                             <?php endif ?>
                         </td>

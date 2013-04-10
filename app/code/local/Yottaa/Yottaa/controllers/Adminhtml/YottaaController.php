@@ -141,7 +141,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                                         if ($match["condition"] == $full_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
                                             $only_cache_anonymous_users = $direction;
                                         }
-                                        if ($match["name"] == "Request-Header" && $match["header_name"] == "Cookie" && $match["condition"] == "EXTERNAL_NO_YOTTAA_CACHE" && $match["type"] == "0" && $match["operator"] == "EQ") {
+                                        if ($match["name"] == "Request-Header" && $match["header_name"] == "Cookie" && $match["condition"] == "EXTERNAL_NO_YOTTAA_CACHE" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
                                             $excluded_cookie = "set";
                                         }
                                         if ($match["condition"] == $admin_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
