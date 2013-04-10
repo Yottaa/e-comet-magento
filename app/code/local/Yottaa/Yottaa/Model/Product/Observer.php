@@ -71,6 +71,25 @@ class Yottaa_Yottaa_Model_Product_Observer
      * @param   Varien_Event_Observer $observer
      * @return  Yottaa_Yottaa_Model_Product_Observer
      */
+    public function catalog_category_save_after($observer)
+    {
+        $event = $observer->getEvent();
+        $category = $event->getCategory();
+
+        $message = "Category save event captured.";
+        Mage::log($message);
+
+        $this->auto_flush_yottaa_cache($category);
+
+        return $this;
+    }
+
+    /**
+     * Triggers Yottaa cache refreshing
+     *
+     * @param   Varien_Event_Observer $observer
+     * @return  Yottaa_Yottaa_Model_Product_Observer
+     */
     public function checkout_cart_save_after($observer)
     {
         $event = $observer->getEvent();
@@ -90,15 +109,42 @@ class Yottaa_Yottaa_Model_Product_Observer
      * @param   Varien_Event_Observer $observer
      * @return  Yottaa_Yottaa_Model_Product_Observer
      */
-    public function customer_login_logout($observer)
+    public function customer_login($observer)
     {
         $event = $observer->getEvent();
         $customer = $event->getCustomer();
 
-        $message = "Customer login/logout event captured.";
+        $message = "Customer login event captured.";
         Mage::log($message);
 
-        $this->auto_flush_yottaa_cache($customer);
+        $helper = Mage::helper('yottaa_yottaa');
+
+        $helper->setNoCacheCookie();
+
+        //$this->auto_flush_yottaa_cache($customer);
+
+        return $this;
+    }
+
+    /**
+     * Triggers Yottaa cache refreshing
+     *
+     * @param   Varien_Event_Observer $observer
+     * @return  Yottaa_Yottaa_Model_Product_Observer
+     */
+    public function customer_logout($observer)
+    {
+        $event = $observer->getEvent();
+        $customer = $event->getCustomer();
+
+        $message = "Customer logout event captured.";
+        Mage::log($message);
+
+        $helper = Mage::helper('yottaa_yottaa');
+
+        $helper->deleteNoCacheCookie();
+
+        //$this->auto_flush_yottaa_cache($customer);
 
         return $this;
     }

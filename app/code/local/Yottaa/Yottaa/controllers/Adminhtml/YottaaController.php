@@ -109,6 +109,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
     {
         if (!isset($json_output["error"])) {
 
+            $full_pages_key = "/";
             $site_pages_key = ".html";
             $admin_pages_key = "/admin";
             $checkout_pages_key = "/checkout";
@@ -118,7 +119,10 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
             $admin_pages_caching = 'unknown';
             $checkout_pages_caching = 'unknown';
 
+            $only_cache_anonymous_users = 'unknown';
+
             $exclusions = '';
+            $excluded_cookie = 'unknown';
 
             if (isset($json_output["defaultActions"]) && isset($json_output["defaultActions"]["resourceActions"]) && isset($json_output["defaultActions"]["resourceActions"]["htmlCache"])) {
                 $html_cachings = $json_output["defaultActions"]["resourceActions"]["htmlCache"];
@@ -134,6 +138,12 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                                         if ($match["condition"] == $site_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
                                             $site_pages_caching = $direction;
                                         }
+                                        if ($match["condition"] == $full_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
+                                            $only_cache_anonymous_users = $direction;
+                                        }
+                                        if ($match["name"] == "Request-Header" && $match["header_name"] == "Cookie" && $match["condition"] == "EXTERNAL_NO_YOTTAA_CACHE" && $match["type"] == "0" && $match["operator"] == "EQ") {
+                                            $excluded_cookie = "set";
+                                        }
                                         if ($match["condition"] == $admin_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
                                             $admin_pages_caching = $direction;
                                         }
@@ -145,6 +155,10 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                             }
                         }
                     }
+                }
+                if ($only_cache_anonymous_users == "unknown" || $excluded_cookie != "set") {
+                    $only_cache_anonymous_users = "unknown";
+                    $excluded_cookie = "unknown";
                 }
             }
 
@@ -182,6 +196,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                          'site_pages_caching' => $site_pages_caching,
                          'admin_pages_caching' => $admin_pages_caching,
                          'checkout_pages_caching' => $checkout_pages_caching,
+                         'only_cache_anonymous_users' => $only_cache_anonymous_users,
                          'exclusions' => $exclusions);
         } else {
             return $json_output;
@@ -245,6 +260,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                 $config->assign('yottaa_settings_site_pages_caching', $json_output2["site_pages_caching"]);
                 $config->assign('yottaa_settings_admin_pages_caching', $json_output2["admin_pages_caching"]);
                 $config->assign('yottaa_settings_checkout_pages_caching', $json_output2["checkout_pages_caching"]);
+                $config->assign('yottaa_settings_only_cache_anonymous_users', $json_output2["only_cache_anonymous_users"]);
 
                 if (strrpos($json_output2["exclusions"],'/admin') === false) {
                     $config->assign('yottaa_settings_admin_pages_optimization', 'unknown');

@@ -16,6 +16,15 @@
             </yottaa_yottaa>
         </helpers>
         <events>
+            <catalog_category_save_after>
+                <observers>
+                    <yottaa_yottaa_product_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Category_Observer</class>
+                        <method>catalog_category_save_after</method>
+                    </yottaa_yottaa_product_observer>
+                </observers>
+            </catalog_category_save_after>
             <catalog_product_save_after>
                 <observers>
                     <yottaa_yottaa_product_observer>
@@ -25,6 +34,7 @@
                     </yottaa_yottaa_product_observer>
                 </observers>
             </catalog_product_save_after>
+            <!--
             <checkout_cart_save_after>
                 <observers>
                     <yottaa_yottaa_cart_observer>
@@ -34,12 +44,13 @@
                     </yottaa_yottaa_cart_observer>
                 </observers>
             </checkout_cart_save_after>
+            -->
             <customer_login>
                 <observers>
                     <yottaa_yottaa_customer_observer>
                         <type>singleton</type>
                         <class>Yottaa_Yottaa_Model_Product_Observer</class>
-                        <method>customer_login_logout</method>
+                        <method>customer_login</method>
                     </yottaa_yottaa_customer_observer>
                 </observers>
             </customer_login>
@@ -48,7 +59,7 @@
                     <yottaa_yottaa_customer_observer>
                         <type>singleton</type>
                         <class>Yottaa_Yottaa_Model_Product_Observer</class>
-                        <method>customer_login_logout</method>
+                        <method>customer_logout</method>
                     </yottaa_yottaa_customer_observer>
                 </observers>
             </customer_logout>
@@ -61,6 +72,7 @@
                     </yottaa_yottaa_cart_observer>
                 </observers>
             </core_session_abstract_add_message>
+            <!--
             <wishlist_items_renewed>
                 <observers>
                     <yottaa_yottaa_wishlist_observer>
@@ -70,6 +82,7 @@
                     </yottaa_yottaa_wishlist_observer>
                 </observers>
             </wishlist_items_renewed>
+            -->
         </events>
         <remote_addr_headers><!-- list headers that contain real client IP if webserver is behind a reverse proxy -->
             <header1>HTTP_X_FORWARDED_FOR</header1>
