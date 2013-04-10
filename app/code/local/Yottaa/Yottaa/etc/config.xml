@@ -34,7 +34,6 @@
                     </yottaa_yottaa_product_observer>
                 </observers>
             </catalog_product_save_after>
-            <!--
             <checkout_cart_save_after>
                 <observers>
                     <yottaa_yottaa_cart_observer>
@@ -44,7 +43,6 @@
                     </yottaa_yottaa_cart_observer>
                 </observers>
             </checkout_cart_save_after>
-            -->
             <customer_login>
                 <observers>
                     <yottaa_yottaa_customer_observer>
@@ -72,6 +70,15 @@
                     </yottaa_yottaa_cart_observer>
                 </observers>
             </core_session_abstract_add_message>
+            <wishlist_add_product>
+                <observers>
+                    <yottaa_yottaa_wishlist_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <method>wishlist_add_product</method>
+                    </yottaa_yottaa_wishlist_observer>
+                </observers>
+            </wishlist_add_product>
             <!--
             <wishlist_items_renewed>
                 <observers>

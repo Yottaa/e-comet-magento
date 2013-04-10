@@ -98,7 +98,10 @@ class Yottaa_Yottaa_Model_Product_Observer
         $message = "Cart save event captured.";
         Mage::log($message);
 
-        $this->auto_flush_yottaa_cache($cart);
+        $helper = Mage::helper('yottaa_yottaa');
+
+        $helper->setNoCacheCookie();
+        //$this->auto_flush_yottaa_cache($cart);
 
         return $this;
     }
@@ -162,9 +165,29 @@ class Yottaa_Yottaa_Model_Product_Observer
         $message = "Add message event captured.";
         Mage::log($message);
 
+        $helper = Mage::helper('yottaa_yottaa');
+
+        $helper->setNoCacheCookie();
+
+        /*
         if ( Mage::getSingleton('catalog/session')->getMessages()->count() > 0 ) {
             $this->auto_flush_yottaa_cache($event);
         }
+        */
+
+        return $this;
+    }
+
+    public function wishlist_add_product($observer)
+    {
+        $event = $observer->getEvent();
+
+        $message = "Wishlist add product event captured.";
+        Mage::log($message);
+
+        $helper = Mage::helper('yottaa_yottaa');
+
+        $helper->setNoCacheCookie();
 
         return $this;
     }
@@ -182,7 +205,11 @@ class Yottaa_Yottaa_Model_Product_Observer
         $message = "Wishlist items renewed event captured.";
         Mage::log($message);
 
-        $this->auto_flush_yottaa_cache($event);
+        $helper = Mage::helper('yottaa_yottaa');
+
+        $helper->setNoCacheCookie();
+
+        //$this->auto_flush_yottaa_cache($event);
 
         return $this;
     }
