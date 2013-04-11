@@ -109,7 +109,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
     {
         if (!isset($json_output["error"])) {
 
-            $full_pages_key = "/";
+            $full_pages_key = "(.*)";
             $site_pages_key = ".html";
             $admin_pages_key = "/admin";
             $checkout_pages_key = "/checkout";
@@ -138,7 +138,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                                         if ($match["condition"] == $site_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
                                             $site_pages_caching = $direction;
                                         }
-                                        if ($match["condition"] == $full_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
+                                        if ($match["condition"] == $full_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "REGEX") {
                                             $only_cache_anonymous_users = $direction;
                                         }
                                         if ($match["name"] == "Request-Header" && $match["header_name"] == "Cookie" && $match["condition"] == "EXTERNAL_NO_YOTTAA_CACHE" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
