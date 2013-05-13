@@ -291,6 +291,66 @@
                             </p>
                         </td>
                     </tr>
+                    <tr>
+                        <td class="label">
+                            <label for="yottaa_yottaa_group_yottaa_enable_logging"> Enable Logging:</label>
+                        </td>
+                        <td class="value">
+                            <select id="yottaa_yottaa_group_yottaa_enable_logging" class=" select"
+                                    name="yottaa_enable_logging">
+                                <option <?php if ($yottaa_enable_logging == 1): ?>selected="selected"<?php endif ?>
+                                        value="1">Yes
+                                </option>
+                                <option <?php if ($yottaa_enable_logging == 0): ?>selected="selected"<?php endif ?>
+                                        value="0">No
+                                </option>
+                            </select>
+
+                            <p class="note">
+                                <span>Enable logging for Yottaa service calls.</span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <label for="yottaa_yottaa_group_yottaa_purge_parent_products"> Purge Parent Products:</label>
+                        </td>
+                        <td class="value">
+                            <select id="yottaa_yottaa_group_yottaa_purge_parent_products" class=" select"
+                                    name="yottaa_purge_parent_products">
+                                <option <?php if ($yottaa_purge_parent_products == 1): ?>selected="selected"<?php endif ?>
+                                        value="1">Yes
+                                </option>
+                                <option <?php if ($yottaa_purge_parent_products == 0): ?>selected="selected"<?php endif ?>
+                                        value="0">No
+                                </option>
+                            </select>
+
+                            <p class="note">
+                                <span>Purge caches for parent products.</span>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <label for="yottaa_yottaa_group_yottaa_purge_product_categories"> Purge Product Categories:</label>
+                        </td>
+                        <td class="value">
+                            <select id="yottaa_yottaa_group_yottaa_purge_product_categories" class=" select"
+                                    name="yottaa_purge_product_categories">
+                                <option <?php if ($yottaa_purge_product_categories == 1): ?>selected="selected"<?php endif ?>
+                                        value="1">Yes
+                                </option>
+                                <option <?php if ($yottaa_purge_product_categories == 0): ?>selected="selected"<?php endif ?>
+                                        value="0">No
+                                </option>
+                            </select>
+
+                            <p class="note">
+                                <span>Purge caches for product categories.</span>
+                            </p>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </fieldset>

@@ -8,7 +8,11 @@
         <models>
             <yottaa_yottaa>
                 <class>Yottaa_Yottaa_Model</class>
+                <resourceModel>yottaa_yottaa_resource_mysql4</resourceModel>
             </yottaa_yottaa>
+            <yottaa_yottaa_resource_mysql4>
+                <class>Yottaa_Yottaa_Model_Resource_Mysql4</class>
+            </yottaa_yottaa_resource_mysql4>
         </models>
         <helpers>
             <yottaa_yottaa>
@@ -16,11 +20,51 @@
             </yottaa_yottaa>
         </helpers>
         <events>
+            <!-- clean yottaa page cache together with magento -->
+            <controller_action_postdispatch_adminhtml_cache_flushAll>
+                <observers>
+                    <yottaa_yottaa_product_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
+                        <method>flush_yottaa_cache</method>
+                    </yottaa_yottaa_product_observer>
+                </observers>
+            </controller_action_postdispatch_adminhtml_cache_flushAll>
+            <controller_action_postdispatch_adminhtml_cache_flushSystem>
+                <observers>
+                    <yottaa_yottaa_product_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
+                        <method>flush_yottaa_cache</method>
+                    </yottaa_yottaa_product_observer>
+                </observers>
+            </controller_action_postdispatch_adminhtml_cache_flushSystem>
+
+            <!-- clean yottaa js/css cache together with magento -->
+            <clean_media_cache_after>
+                <observers>
+                    <enterprise_pagecache>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
+                        <method>flush_yottaa_cache</method>
+                    </enterprise_pagecache>
+                </observers>
+            </clean_media_cache_after>
+
+            <!-- clean yottaa catalog images cache together with magento -->
+            <clean_catalog_images_cache_after>
+                <observers>
+                    <enterprise_pagecache>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
+                        <method>flush_yottaa_cache</method>
+                    </enterprise_pagecache>
+                </observers>
+            </clean_catalog_images_cache_after>
+            
             <catalog_category_save_after>
                 <observers>
                     <yottaa_yottaa_product_observer>
                         <type>singleton</type>
-                        <class>Yottaa_Yottaa_Model_Category_Observer</class>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
                         <method>catalog_category_save_after</method>
                     </yottaa_yottaa_product_observer>
                 </observers>
@@ -29,7 +73,7 @@
                 <observers>
                     <yottaa_yottaa_product_observer>
                         <type>singleton</type>
-                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
                         <method>catalog_product_save_after</method>
                     </yottaa_yottaa_product_observer>
                 </observers>
@@ -38,7 +82,7 @@
                 <observers>
                     <yottaa_yottaa_cart_observer>
                         <type>singleton</type>
-                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
                         <method>checkout_cart_save_after</method>
                     </yottaa_yottaa_cart_observer>
                 </observers>
@@ -47,7 +91,7 @@
                 <observers>
                     <yottaa_yottaa_customer_observer>
                         <type>singleton</type>
-                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
                         <method>customer_login</method>
                     </yottaa_yottaa_customer_observer>
                 </observers>
@@ -56,7 +100,7 @@
                 <observers>
                     <yottaa_yottaa_customer_observer>
                         <type>singleton</type>
-                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
                         <method>customer_logout</method>
                     </yottaa_yottaa_customer_observer>
                 </observers>
@@ -65,7 +109,7 @@
                 <observers>
                     <yottaa_yottaa_cart_observer>
                         <type>singleton</type>
-                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
                         <method>core_session_abstract_add_message</method>
                     </yottaa_yottaa_cart_observer>
                 </observers>
@@ -74,7 +118,7 @@
                 <observers>
                     <yottaa_yottaa_wishlist_observer>
                         <type>singleton</type>
-                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
                         <method>wishlist_add_product</method>
                     </yottaa_yottaa_wishlist_observer>
                 </observers>
@@ -84,7 +128,7 @@
                 <observers>
                     <yottaa_yottaa_wishlist_observer>
                         <type>singleton</type>
-                        <class>Yottaa_Yottaa_Model_Product_Observer</class>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
                         <method>wishlist_items_renewed</method>
                     </yottaa_yottaa_wishlist_observer>
                 </observers>

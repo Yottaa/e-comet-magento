@@ -1,179 +1,233 @@
 <?PHP
 
-class Yottaa_Yottaa_Helper_Data extends Mage_Core_Helper_Abstract
+class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
 {
+    const YOTTAA_CONFIG_GROUP = 'yottaa/yottaa_group/';
+
+    const API_KEY_CONFIG = 'yottaa_api_key';
+    const USER_ID_CONFIG = 'yottaa_user_id';
+    const SITE_ID_CONFIG = 'yottaa_site_id';
+    const AUTO_CLEAR_CACHE_CONFIG = 'yottaa_auto_clear_cache';
+    const ENABLE_LOGGING_CONFIG = 'yottaa_enable_logging';
+    const PURGE_PARENT_PRODUCTS_CONFIG = 'yottaa_purge_parent_products';
+    const PURGE_PRODUCT_CATEGORIES_CONFIG = 'yottaa_purge_product_categories';
 
     /**
-     * Accepts provided http content, checks for a valid http response,
-     * unchunks if needed, returns http content without headers on
-     * success, false on any errors.
-     *
-     * @param null $content
-     * @return bool|string
+     * Constructor.
      */
-    public function parseHttpResponse($content = null)
+    public function __construct()
     {
-        if (empty($content)) {
-            return false;
-        }
-        // split into array, headers and content.
-        $hunks = explode("\r\n\r\n", trim($content));
-        if (!is_array($hunks) or count($hunks) < 2) {
-            return false;
-        }
-        $header = $hunks[count($hunks) - 2];
-        $body = $hunks[count($hunks) - 1];
+        $this->uid = Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::USER_ID_CONFIG);
+        $this->key = Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::API_KEY_CONFIG);
+        $this->sid = Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::SITE_ID_CONFIG);
+    }
 
-        $headers = explode("\n", $header);
-        unset($hunks);
-        unset($header);
-        if (!$this->validateHttpResponse($headers)) {
-            return '{"error" : ' . trim($body) . '}';
-            //return false;
-        }
-        if (in_array('Transfer-Coding: chunked', $headers)) {
-            return trim($this->unchunkHttpResponse($body));
+    /**
+     * Post-processes Yottaa site settings.
+     *
+     * @param $json_output
+     * @return array
+     */
+    protected function postProcessingSettings($json_output)
+    {
+        if (!isset($json_output["error"])) {
+
+            $full_pages_key = "(.*)";
+            $site_pages_key = ".html";
+            $admin_pages_key = "/admin";
+            $checkout_pages_key = "/checkout";
+
+            $home_page_caching = 'unknown';
+            $site_pages_caching = 'unknown';
+            $admin_pages_caching = 'unknown';
+            $checkout_pages_caching = 'unknown';
+
+            $only_cache_anonymous_users = 'unknown';
+
+            $exclusions = '';
+            $excluded_cookie = 'unknown';
+
+            if (isset($json_output["defaultActions"]) && isset($json_output["defaultActions"]["resourceActions"]) && isset($json_output["defaultActions"]["resourceActions"]["htmlCache"])) {
+                $html_cachings = $json_output["defaultActions"]["resourceActions"]["htmlCache"];
+                foreach ($html_cachings as &$html_caching) {
+                    if (isset($html_caching["filters"])) {
+                        $filters = $html_caching["filters"];
+                        foreach ($filters as &$filter) {
+                            if (isset($filter["match"])) {
+                                $direction = $filter["direction"] == 1 ? "included" : "excluded";
+                                $matches = $filter["match"];
+                                foreach ($matches as &$match) {
+                                    if (isset($match["condition"])) {
+                                        if ($match["condition"] == $site_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
+                                            $site_pages_caching = $direction;
+                                        }
+                                        if ($match["condition"] == $full_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "REGEX") {
+                                            $only_cache_anonymous_users = $direction;
+                                        }
+                                        if ($match["name"] == "Request-Header" && $match["header_name"] == "Cookie" && $match["condition"] == "EXTERNAL_NO_YOTTAA_CACHE" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
+                                            $excluded_cookie = "set";
+                                        }
+                                        if ($match["condition"] == $admin_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
+                                            $admin_pages_caching = $direction;
+                                        }
+                                        if ($match["condition"] == $checkout_pages_key && $match["name"] == "URI" && $match["type"] == "0" && $match["operator"] == "CONTAIN") {
+                                            $checkout_pages_caching = $direction;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if ($only_cache_anonymous_users == "unknown" || $excluded_cookie != "set") {
+                    $only_cache_anonymous_users = "unknown";
+                    $excluded_cookie = "unknown";
+                }
+            }
+
+            if (isset($json_output["defaultActions"]) && isset($json_output["defaultActions"]["filters"])) {
+                $filters = $json_output["defaultActions"]["filters"];
+                foreach ($filters as &$filter) {
+                    if (isset($filter["match"])) {
+                        if ($filter["direction"] == 0) {
+                            $matches = $filter["match"];
+                            foreach ($matches as &$match) {
+                                if (isset($match["condition"])) {
+                                    if ($exclusions != '') {
+                                        $exclusions = $exclusions . ' ; ';
+                                    }
+                                    $exclusions = $exclusions . $match["condition"];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (isset($json_output["resourceRules"])) {
+                $resourceRules = $json_output["resourceRules"];
+                foreach ($resourceRules as &$resourceRule) {
+                    if (isset($resourceRule["special_type"]) && $resourceRule["special_type"] == "home") {
+                        if ($resourceRule["enabled"]) {
+                            $home_page_caching = 'included';
+                        }
+                    }
+                }
+            }
+
+            return array('home_page_caching' => $home_page_caching,
+                         'site_pages_caching' => $site_pages_caching,
+                         'admin_pages_caching' => $admin_pages_caching,
+                         'checkout_pages_caching' => $checkout_pages_caching,
+                         'only_cache_anonymous_users' => $only_cache_anonymous_users,
+                         'exclusions' => $exclusions);
         } else {
-            return trim($body);
+            return $json_output;
         }
     }
 
     /**
-     * Validate http responses by checking header.  Expects array of
-     * headers as argument.  Returns boolean.
+     * Logs a message.
      *
-     * @param null $headers
-     * @return bool
+     * @param $message
+     * @return void
      */
-    private function validateHttpResponse($headers = null)
+    public function log($message)
     {
-        if (!is_array($headers) or count($headers) < 1) {
-            return false;
+        if ($this->getEnableLoggingParameter() == 1) {
+            Mage::log($message);
         }
-        switch (trim(strtolower($headers[0]))) {
-            case 'http/1.0 100 ok':
-            case 'http/1.0 200 ok':
-            case 'http/1.1 100 ok':
-            case 'http/1.1 200 ok':
-                return true;
-                break;
-        }
-        return false;
     }
 
     /**
-     * Unchunk http content.  Returns unchunked content on success,
-     * false on any errors...  Borrows from code posted above by
-     * jbr at ya-right dot com.
-     *
-     * @param null $str
-     * @return bool|null|string
+     * @return array
      */
-    private function unchunkHttpResponse($str = null)
+    public function getParameters()
     {
-        if (!is_string($str) or strlen($str) < 1) {
-            return false;
-        }
-        $eol = "\r\n";
-        $add = strlen($eol);
-        $tmp = $str;
-        $str = '';
-        do {
-            $tmp = ltrim($tmp);
-            $pos = strpos($tmp, $eol);
-            if ($pos === false) {
-                return false;
-            }
-            $len = hexdec(substr($tmp, 0, $pos));
-            if (!is_numeric($len) or $len < 0) {
-                return false;
-            }
-            $str .= substr($tmp, ($pos + $add), $len);
-            $tmp = substr($tmp, ($len + $pos + $add));
-            $check = trim($tmp);
-        } while (!empty($check));
-        unset($tmp);
-        return $str;
+        return array("api_key" => Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::API_KEY_CONFIG),
+                     "user_id" => Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::USER_ID_CONFIG),
+                     "site_id" => Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::SITE_ID_CONFIG),
+        );
     }
 
     /**
-     * @param $url
-     * @param $params
-     * @param $method
-     * @return string
+     * @param $key
+     * @param $uid
+     * @param $sid
+     * @return void
      */
-    public function curl_post_async($url, $params, $method, $api_key)
+    public function updateParameters($key, $uid, $sid)
     {
-        foreach ($params as $key => &$val) {
-            if (is_array($val)) $val = implode(',', $val);
-            $post_params[] = $key . '=' . urlencode($val);
-        }
-        $post_string = implode('&', $post_params);
-
-        $parts = parse_url($url);
-
-        $fp = fsockopen("ssl://" . $parts['host'],
-                        isset($parts['port']) ? $parts['port'] : 443,
-                        $errno, $errstr, 30);
-
-        // Data goes in the path for a GET request
-        $parts['path'] .= '?' . $post_string;
-
-        $out = $method . " " . $parts['path'] . " HTTP/1.1\r\n";
-        $out .= "Host: " . $parts['host'] . "\r\n";
-        $out .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $out .= "Content-Length: 0\r\n";
-        $out .= "YOTTAA-API-KEY: " . $api_key . "\r\n";
-        $out .= "Connection: Close\r\n\r\n";
-
-        fwrite($fp, $out);
-        $result = "";
-        while (!feof($fp)) {
-            $result .= fgets($fp, 128);
-        }
-        fclose($fp);
-
-        return $result;
-    }
-
-    const NO_CACHE_COOKIE = 'EXTERNAL_NO_YOTTAA_CACHE';
-
-    /**
-     * Get Cookie object
-     *
-     * @return Mage_Core_Model_Cookie
-     */
-    public static function getCookie()
-    {
-        return Mage::getSingleton('core/cookie');
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::API_KEY_CONFIG, $key);
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::USER_ID_CONFIG, $uid);
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::SITE_ID_CONFIG, $sid);
     }
 
     /**
-     * Disable caching of this and all future request for this visitor
-     *
-     * @return Yottaa_Yottaa_Helper_Data
+     * @return
      */
-    public function setNoCacheCookie($renewOnly = false)
+    public function getEnableLoggingParameter()
     {
-        if ($this->getCookie()->get(self::NO_CACHE_COOKIE)) {
-            $this->getCookie()->renew(self::NO_CACHE_COOKIE);
-        } elseif (!$renewOnly) {
-            $this->getCookie()->set(self::NO_CACHE_COOKIE, 1);
-        }
-        return $this;
+        return Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::ENABLE_LOGGING_CONFIG);
     }
 
     /**
-     * Enable Yottaa page caching by removing no cache cookie.
-     *
-     * @return Yottaa_Yottaa_Helper_Data
+     * @param $enabled
+     * @return void
      */
-    public function deleteNoCacheCookie()
+    public function setEnableLoggingParameter($enabled)
     {
-        if ($this->getCookie()->get(self::NO_CACHE_COOKIE)) {
-            $this->getCookie()->delete(self::NO_CACHE_COOKIE);
-        }
-        return $this;
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::ENABLE_LOGGING_CONFIG, intval($enabled));
     }
 
+    /**
+     * @return
+     */
+    public function getAutoClearCacheParameter()
+    {
+        return Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::AUTO_CLEAR_CACHE_CONFIG);
+    }
+
+    /**
+     * @param $enabled
+     * @return void
+     */
+    public function setAutoClearCacheParameter($enabled)
+    {
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::AUTO_CLEAR_CACHE_CONFIG, intval($enabled));
+    }
+
+    /**
+     * @return
+     */
+    public function getPurgeParentProductsParameter()
+    {
+        return Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::PURGE_PARENT_PRODUCTS_CONFIG);
+    }
+
+    /**
+     * @param $enabled
+     * @return void
+     */
+    public function setPurgeParentProductsParameter($enabled)
+    {
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::PURGE_PARENT_PRODUCTS_CONFIG, intval($enabled));
+    }
+
+    /**
+     * @return
+     */
+    public function getPurgeProductCategoriesParameter()
+    {
+        return Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::PURGE_PRODUCT_CATEGORIES_CONFIG);
+    }
+
+    /**
+     * @param $enabled
+     * @return void
+     */
+    public function setPurgeProductCategoriesParameter($enabled)
+    {
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::PURGE_PRODUCT_CATEGORIES_CONFIG, intval($enabled));
+    }
 }
