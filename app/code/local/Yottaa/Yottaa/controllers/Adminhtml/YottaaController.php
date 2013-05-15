@@ -42,39 +42,40 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
             $new_yottaa_account = true;
         } else {
             $json_output = $helper->getStatus();
-
             if (!isset($json_output["error"])) {
                 $yottaa_status = $json_output["optimizer"];
                 $yottaa_preview_url = $json_output["preview_url"];
                 $config->assign('yottaa_status', $yottaa_status);
                 $config->assign('yottaa_preview_url', $yottaa_preview_url);
+
+                $json_output2 = $helper->getSettings();
+
+                if (!isset($json_output2["error"])) {
+                    $config->assign('yottaa_settings_status', 'ok');
+                    $config->assign('yottaa_settings_home_page_caching', $json_output2["home_page_caching"]);
+                    $config->assign('yottaa_settings_site_pages_caching', $json_output2["site_pages_caching"]);
+                    $config->assign('yottaa_settings_admin_pages_caching', $json_output2["admin_pages_caching"]);
+                    $config->assign('yottaa_settings_checkout_pages_caching', $json_output2["checkout_pages_caching"]);
+                    $config->assign('yottaa_settings_only_cache_anonymous_users', $json_output2["only_cache_anonymous_users"]);
+
+                    if (strrpos($json_output2["exclusions"], '/admin') === false) {
+                        $config->assign('yottaa_settings_admin_pages_optimization', 'unknown');
+                    } else {
+                        $config->assign('yottaa_settings_admin_pages_optimization', 'excluded');
+                    }
+
+                } else {
+                    $error = $json_output2["error"];
+                    $config->assign('yottaa_settings_status', 'error');
+                    $config->assign('yottaa_settings_status_error', json_encode($error));
+                }
+
             } else {
                 $error = $json_output["error"];
                 $config->assign('yottaa_status', 'error');
                 $config->assign('yottaa_status_error', json_encode($error));
             }
 
-            $json_output2 = $helper->getSettings();
-
-            if (!isset($json_output2["error"])) {
-                $config->assign('yottaa_settings_status', 'ok');
-                $config->assign('yottaa_settings_home_page_caching', $json_output2["home_page_caching"]);
-                $config->assign('yottaa_settings_site_pages_caching', $json_output2["site_pages_caching"]);
-                $config->assign('yottaa_settings_admin_pages_caching', $json_output2["admin_pages_caching"]);
-                $config->assign('yottaa_settings_checkout_pages_caching', $json_output2["checkout_pages_caching"]);
-                $config->assign('yottaa_settings_only_cache_anonymous_users', $json_output2["only_cache_anonymous_users"]);
-
-                if (strrpos($json_output2["exclusions"],'/admin') === false) {
-                    $config->assign('yottaa_settings_admin_pages_optimization', 'unknown');
-                } else {
-                    $config->assign('yottaa_settings_admin_pages_optimization', 'excluded');
-                }
-
-            } else {
-                $error = $json_output2["error"];
-                $config->assign('yottaa_settings_status', 'error');
-                $config->assign('yottaa_settings_status_error', json_encode($error));
-            }
         }
         $config->assign('new_yottaa_account', $new_yottaa_account);
 
@@ -109,7 +110,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                 $preview_url = $json_output["preview_url"];
 
                 $message = $this->__('New Yottaa account has been created with ') . '<a href="' . $preview_url . '">preview url</a>.';
-                $message2 = $this->__('Your Yottaa login information has been sent to your email address ') . $yottaa_user_email .'.';
+                $message2 = $this->__('Your Yottaa login information has been sent to your email address ') . $yottaa_user_email . '.';
 
                 $helper->updateParameters($api_key, $user_id, $site_id);
 

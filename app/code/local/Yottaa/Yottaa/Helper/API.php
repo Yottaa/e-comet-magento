@@ -15,28 +15,26 @@ class Yottaa_Yottaa_Helper_API extends Mage_Core_Helper_Abstract {
   /**
    * The API key.
    */
-  protected $key;
+  private $key;
 
   /**
    * The user id.
    */
-  protected $uid;
+  private $uid;
 
   /**
    * The site id.
    */
-  protected  $sid;
+  private  $sid;
 
   /**
    * Constructor.
    */
-  /*
   public function __construct($key, $uid, $sid) {
     $this->key = $key;
     $this->uid = $uid;
     $this->sid = $sid;
   }
-  */
 
   /**
    * Checks if it has all required parameters.
@@ -237,21 +235,27 @@ class Yottaa_Yottaa_Helper_API extends Mage_Core_Helper_Abstract {
    */
   private function parseHttpResponse($content = NULL) {
     if (empty($content)) {
-      return FALSE;
+      return '{"error" : "Empty Response"}';
     }
     // split into array, headers and content.
     $hunks = explode("\r\n\r\n", trim($content));
-    if (!is_array($hunks) or count($hunks) < 2) {
-      return FALSE;
+    if (!is_array($hunks)) {
+      return json_encode(array("error"=>trim($content)));
     }
-    $header = $hunks[count($hunks) - 2];
-    $body = $hunks[count($hunks) - 1];
+    // add support for empty body
+    if (count($hunks) < 2) {
+      $header = $hunks[count($hunks) - 1];
+      $body = "";
+    }
+    else {
+      $header = $hunks[count($hunks) - 2];
+      $body = $hunks[count($hunks) - 1];
+    }
     $headers = explode("\n", $header);
     unset($hunks);
     unset($header);
     if (!$this->validateHttpResponse($headers)) {
-      return '{"error" : ' . trim($body) . '}';
-      //return FALSE;
+      return json_encode(array("error"=>trim($content)));
     }
     if (in_array('Transfer-Coding: chunked', $headers)) {
       return trim($this->unchunkHttpResponse($body));

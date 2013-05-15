@@ -23,9 +23,15 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function __construct()
     {
-        $this->uid = Mage::getStoreConfig(self::YOTTAA_USER_ID_CONFIG);
-        $this->key = Mage::getStoreConfig(self::YOTTAA_API_KEY_CONFIG);
-        $this->sid = Mage::getStoreConfig(self::YOTTAA_SITE_ID_CONFIG);
+        //$this->uid = Mage::getStoreConfig(self::YOTTAA_USER_ID_CONFIG);
+        //$this->key = Mage::getStoreConfig(self::YOTTAA_API_KEY_CONFIG);
+        //$this->sid = Mage::getStoreConfig(self::YOTTAA_SITE_ID_CONFIG);
+
+        $uid = Mage::getStoreConfig(self::YOTTAA_USER_ID_CONFIG);
+        $key = Mage::getStoreConfig(self::YOTTAA_API_KEY_CONFIG);
+        $sid = Mage::getStoreConfig(self::YOTTAA_SITE_ID_CONFIG);
+
+        parent::__construct($key, $uid, $sid);
     }
 
     /**

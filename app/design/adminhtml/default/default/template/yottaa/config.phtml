@@ -92,7 +92,8 @@
         </div>
         <fieldset class="">
             <?php if ($yottaa_status == 'error'): ?>
-            <fieldset class="a-center bold error">
+            <fieldset class="bold error">
+                <div>Failed to retrieve your optimizer status!</div>
                 <div>Error : <?php echo $yottaa_status_error ?></div>
             </fieldset>
             <?php else: ?>

@@ -144,6 +144,15 @@
                 </observers>
             </wishlist_items_renewed>
             -->
+            <model_config_data_save_before>
+                <observers>
+                    <yottaa_yottaa_config_data_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
+                        <method>model_config_data_save_before</method>
+                    </yottaa_yottaa_config_data_observer>
+                </observers>
+            </model_config_data_save_before>
         </events>
         <remote_addr_headers><!-- list headers that contain real client IP if webserver is behind a reverse proxy -->
             <header1>HTTP_X_FORWARDED_FOR</header1>
