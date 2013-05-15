@@ -7,11 +7,10 @@
 
 class Yottaa_Yottaa_Helper_Cookie extends Mage_Core_Helper_Abstract
 {
-
     const NO_CACHE_COOKIE = 'EXTERNAL_NO_YOTTAA_CACHE';
 
     /**
-     * Get Cookie object
+     * Gets Cookie object.
      *
      * @return Mage_Core_Model_Cookie
      */
@@ -21,7 +20,7 @@ class Yottaa_Yottaa_Helper_Cookie extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Disable caching of this and all future request for this visitor
+     * Disables caching of this and all future request for this visitor.
      *
      * @return Yottaa_Yottaa_Helper_Data
      */
@@ -36,7 +35,7 @@ class Yottaa_Yottaa_Helper_Cookie extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Enable Yottaa page caching by removing no cache cookie.
+     * Enables Yottaa page caching by removing no cache cookie.
      *
      * @return Yottaa_Yottaa_Helper_Data
      */
@@ -47,5 +46,4 @@ class Yottaa_Yottaa_Helper_Cookie extends Mage_Core_Helper_Abstract
         }
         return $this;
     }
-
 }

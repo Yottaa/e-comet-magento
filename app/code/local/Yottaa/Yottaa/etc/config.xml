@@ -87,6 +87,16 @@
                     </yottaa_yottaa_cart_observer>
                 </observers>
             </checkout_cart_save_after>
+            <!-- purge cms page cache after save -->
+            <cms_page_save_after>
+                <observers>
+                    <yottaa_yottaa_cms_observer>
+                        <type>singleton</type>
+                        <class>Yottaa_Yottaa_Model_Observer</class>
+                        <method>cms_page_save_after</method>
+                    </yottaa_yottaa_cms_observer>
+                </observers>
+            </cms_page_save_after>
             <customer_login>
                 <observers>
                     <yottaa_yottaa_customer_observer>

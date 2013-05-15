@@ -11,11 +11,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
 
         $this->loadLayout();
 
-        // Sets the window title to "Yottaa / System / Magento Admin"
-        $this->_title($this->__('System'))
-                ->_title($this->__('Yottaa'))
-        // Highlight the current menu
-                ->_setActiveMenu('system');
+        $this->_title($this->__('System'))->_title($this->__('Yottaa'))->_setActiveMenu('system');
 
         $parameters = $helper->getParameters();
 
@@ -83,7 +79,6 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
         $config->assign('new_yottaa_account', $new_yottaa_account);
 
         $this->renderLayout();
-
     }
 
     /**
@@ -119,9 +114,7 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                 $helper->updateParameters($api_key, $user_id, $site_id);
 
                 Mage::getConfig()->cleanCache();
-
                 Mage::getSingleton('adminhtml/session')->addSuccess($message);
-
                 Mage::getSingleton('adminhtml/session')->addSuccess($message2);
             } else {
                 $error = $json_output["error"];
@@ -147,41 +140,27 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
             }
 
             $yottaa_auto_clear_cache = $post['yottaa_auto_clear_cache'];
-
             $status = intval($yottaa_auto_clear_cache) == 1 ? 'enabled' : 'disabled';
-
             $helper->setAutoClearCacheParameter($yottaa_auto_clear_cache);
-
             $message = $this->__('Automatically clearing Yottaa\'s site optimizer cache is ') . $status . '.';
 
             $yottaa_enable_logging = $post['yottaa_enable_logging'];
-
             $status = intval($yottaa_enable_logging) == 1 ? 'enabled' : 'disabled';
-
             $helper->setEnableLoggingParameter($yottaa_enable_logging);
-
             $message = $message . '<br/>' . $this->__('Logging for Yottaa service calls is ') . $status . '.';
 
             $yottaa_purge_parent_products = $post['yottaa_purge_parent_products'];
-
             $status = intval($yottaa_purge_parent_products) == 1 ? 'enabled' : 'disabled';
-
             $helper->setPurgeParentProductsParameter($yottaa_purge_parent_products);
-
             $message = $message . '<br/>' . $this->__('Purging caches for parent products is ') . $status . '.';
 
             $yottaa_purge_product_categories = $post['yottaa_purge_product_categories'];
-
             $status = intval($yottaa_purge_product_categories) == 1 ? 'enabled' : 'disabled';
-
             $helper->setPurgeProductCategoriesParameter($yottaa_purge_product_categories);
-
             $message = $message . '<br/>' . $this->__('Purging caches for product categories is ') . $status . '.';
 
             Mage::getConfig()->cleanCache();
-
             Mage::getSingleton('adminhtml/session')->addSuccess($message);
-
         } catch (Exception $e) {
             Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
         }

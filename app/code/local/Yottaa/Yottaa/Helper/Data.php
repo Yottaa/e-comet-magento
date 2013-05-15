@@ -2,8 +2,6 @@
 
 class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
 {
-    const YOTTAA_CONFIG_GROUP = 'yottaa/yottaa_group/';
-
     const API_KEY_CONFIG = 'yottaa_api_key';
     const USER_ID_CONFIG = 'yottaa_user_id';
     const SITE_ID_CONFIG = 'yottaa_site_id';
@@ -12,14 +10,22 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
     const PURGE_PARENT_PRODUCTS_CONFIG = 'yottaa_purge_parent_products';
     const PURGE_PRODUCT_CATEGORIES_CONFIG = 'yottaa_purge_product_categories';
 
+    const YOTTAA_API_KEY_CONFIG = 'yottaa/yottaa_group/yottaa_api_key';
+    const YOTTAA_USER_ID_CONFIG = 'yottaa/yottaa_group/yottaa_user_id';
+    const YOTTAA_SITE_ID_CONFIG = 'yottaa/yottaa_group/yottaa_site_id';
+    const YOTTAA_AUTO_CLEAR_CACHE_CONFIG = 'yottaa/yottaa_group/yottaa_auto_clear_cache';
+    const YOTTAA_ENABLE_LOGGING_CONFIG = 'yottaa/yottaa_group/yottaa_enable_logging';
+    const YOTTAA_PURGE_PARENT_PRODUCTS_CONFIG = 'yottaa/yottaa_group/yottaa_purge_parent_products';
+    const YOTTAA_PURGE_PRODUCT_CATEGORIES_CONFIG = 'yottaa/yottaa_group/yottaa_purge_product_categories';
+
     /**
      * Constructor.
      */
     public function __construct()
     {
-        $this->uid = Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::USER_ID_CONFIG);
-        $this->key = Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::API_KEY_CONFIG);
-        $this->sid = Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::SITE_ID_CONFIG);
+        $this->uid = Mage::getStoreConfig(self::YOTTAA_USER_ID_CONFIG);
+        $this->key = Mage::getStoreConfig(self::YOTTAA_API_KEY_CONFIG);
+        $this->sid = Mage::getStoreConfig(self::YOTTAA_SITE_ID_CONFIG);
     }
 
     /**
@@ -144,9 +150,9 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function getParameters()
     {
-        return array("api_key" => Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::API_KEY_CONFIG),
-                     "user_id" => Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::USER_ID_CONFIG),
-                     "site_id" => Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::SITE_ID_CONFIG),
+        return array("api_key" => Mage::getStoreConfig(self::YOTTAA_API_KEY_CONFIG),
+                     "user_id" => Mage::getStoreConfig(self::YOTTAA_USER_ID_CONFIG),
+                     "site_id" => Mage::getStoreConfig(self::YOTTAA_SITE_ID_CONFIG),
         );
     }
 
@@ -158,9 +164,9 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function updateParameters($key, $uid, $sid)
     {
-        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::API_KEY_CONFIG, $key);
-        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::USER_ID_CONFIG, $uid);
-        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::SITE_ID_CONFIG, $sid);
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_API_KEY_CONFIG, $key);
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_USER_ID_CONFIG, $uid);
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_SITE_ID_CONFIG, $sid);
     }
 
     /**
@@ -168,7 +174,7 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function getEnableLoggingParameter()
     {
-        return Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::ENABLE_LOGGING_CONFIG);
+        return Mage::getStoreConfig(self::YOTTAA_ENABLE_LOGGING_CONFIG);
     }
 
     /**
@@ -177,7 +183,7 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function setEnableLoggingParameter($enabled)
     {
-        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::ENABLE_LOGGING_CONFIG, intval($enabled));
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_ENABLE_LOGGING_CONFIG, intval($enabled));
     }
 
     /**
@@ -185,7 +191,7 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function getAutoClearCacheParameter()
     {
-        return Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::AUTO_CLEAR_CACHE_CONFIG);
+        return Mage::getStoreConfig(self::YOTTAA_AUTO_CLEAR_CACHE_CONFIG);
     }
 
     /**
@@ -194,7 +200,7 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function setAutoClearCacheParameter($enabled)
     {
-        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::AUTO_CLEAR_CACHE_CONFIG, intval($enabled));
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_AUTO_CLEAR_CACHE_CONFIG, intval($enabled));
     }
 
     /**
@@ -202,7 +208,7 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function getPurgeParentProductsParameter()
     {
-        return Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::PURGE_PARENT_PRODUCTS_CONFIG);
+        return Mage::getStoreConfig(self::YOTTAA_PURGE_PARENT_PRODUCTS_CONFIG);
     }
 
     /**
@@ -211,7 +217,7 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function setPurgeParentProductsParameter($enabled)
     {
-        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::PURGE_PARENT_PRODUCTS_CONFIG, intval($enabled));
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_PURGE_PARENT_PRODUCTS_CONFIG, intval($enabled));
     }
 
     /**
@@ -219,7 +225,7 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function getPurgeProductCategoriesParameter()
     {
-        return Mage::getStoreConfig(self::YOTTAA_CONFIG_GROUP . self::PURGE_PRODUCT_CATEGORIES_CONFIG);
+        return Mage::getStoreConfig(self::YOTTAA_PURGE_PRODUCT_CATEGORIES_CONFIG);
     }
 
     /**
@@ -228,6 +234,6 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function setPurgeProductCategoriesParameter($enabled)
     {
-        Mage::getModel('core/config')->saveConfig(self::YOTTAA_CONFIG_GROUP . self::PURGE_PRODUCT_CATEGORIES_CONFIG, intval($enabled));
+        Mage::getModel('core/config')->saveConfig(self::YOTTAA_PURGE_PRODUCT_CATEGORIES_CONFIG, intval($enabled));
     }
 }
