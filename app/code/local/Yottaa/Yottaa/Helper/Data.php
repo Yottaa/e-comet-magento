@@ -23,14 +23,9 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
      */
     public function __construct()
     {
-        //$this->uid = Mage::getStoreConfig(self::YOTTAA_USER_ID_CONFIG);
-        //$this->key = Mage::getStoreConfig(self::YOTTAA_API_KEY_CONFIG);
-        //$this->sid = Mage::getStoreConfig(self::YOTTAA_SITE_ID_CONFIG);
-
         $uid = Mage::getStoreConfig(self::YOTTAA_USER_ID_CONFIG);
         $key = Mage::getStoreConfig(self::YOTTAA_API_KEY_CONFIG);
         $sid = Mage::getStoreConfig(self::YOTTAA_SITE_ID_CONFIG);
-
         parent::__construct($key, $uid, $sid);
     }
 
@@ -43,7 +38,6 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
     protected function postProcessingSettings($json_output)
     {
         if (!isset($json_output["error"])) {
-
             $full_pages_key = "(.*)";
             $site_pages_key = ".html";
             $admin_pages_key = "/admin";
@@ -173,6 +167,7 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
         Mage::getModel('core/config')->saveConfig(self::YOTTAA_API_KEY_CONFIG, $key);
         Mage::getModel('core/config')->saveConfig(self::YOTTAA_USER_ID_CONFIG, $uid);
         Mage::getModel('core/config')->saveConfig(self::YOTTAA_SITE_ID_CONFIG, $sid);
+        parent::updateParameters($key, $uid, $sid);
     }
 
     /**
