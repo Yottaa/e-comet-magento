@@ -119,9 +119,9 @@
                     Your site is currently in <strong class="status-live" style="color:#3D6611;">Live</strong>.
                 </div>
                 <?php endif ?>
-            <?php if ($yottaa_status == 'paused'): ?>
+            <?php if ($yottaa_status == 'transparent proxy' || $yottaa_status == 'bypass'): ?>
                 <div>
-                    Your site is currently in <strong class="status-paused notice">Paused</strong>.
+                    Your site is currently in <strong class="status-paused notice">Paused (<?php echo $yottaa_status ?> mode)</strong>.
                 </div>
                 <?php endif ?>
 
@@ -159,7 +159,7 @@
                     <input name="form_key" type="hidden"
                            value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
                     <tr>
-                        <?php if ($yottaa_status == 'paused'): ?>
+                        <?php if ($yottaa_status == 'transparent proxy' || $yottaa_status == 'bypass'): ?>
                         <td class="">
                             <button onclick="actionsForm.submit()" class="scalable save" type="button">
                                 <span><?php echo $this->__('Resume Optimizations') ?></span>
@@ -190,7 +190,7 @@
                 <script type="text/javascript">
                     var actionsForm = new varienForm('actions_form');
                 </script>
-                <?php if ($yottaa_status == 'live' || $yottaa_status == 'paused'): ?>
+                <?php if ($yottaa_status == 'live' || $yottaa_status == 'transparent proxy' || $yottaa_status == 'bypass'): ?>
                     <form id="clear_cache_form" name="clear_cache_form" method="post"
                           action="<?php echo $this->getUrl('*/*/postActions')?>">
                         <input name="form_key" type="hidden"
