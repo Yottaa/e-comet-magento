@@ -44,8 +44,14 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
             $json_output = $helper->getStatus();
             if (!isset($json_output["error"])) {
                 $yottaa_status = $json_output["optimizer"];
+                $yottaa_is_live = $helper->isLive($yottaa_status);
+                $yottaa_is_paused = $helper->isPaused($yottaa_status);
+                $yottaa_is_valid = $helper->isValidStatus($yottaa_status);
                 $yottaa_preview_url = $json_output["preview_url"];
                 $config->assign('yottaa_status', $yottaa_status);
+                $config->assign('yottaa_is_live', $yottaa_is_live);
+                $config->assign('yottaa_is_paused', $yottaa_is_paused);
+                $config->assign('yottaa_is_valid', $yottaa_is_valid);
                 $config->assign('yottaa_preview_url', $yottaa_preview_url);
 
                 $json_output2 = $helper->getSettings();

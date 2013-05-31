@@ -186,7 +186,7 @@ class Yottaa_Yottaa_Model_Observer
         // Prepare purge path configs
         $path_configs = array();
         foreach ($paths as $path) {
-            array_push($path_configs, array("condition" => $path, "name" => "URI", "operator" => "REGEX"));
+            array_push($path_configs, array("condition" => $path, "name" => "URI", "operator" => "REGEX", "type" => "html"));
         }
         $helper->flushPaths($path_configs);
 
@@ -210,7 +210,7 @@ class Yottaa_Yottaa_Model_Observer
         // Prepare purge path configs
         $path_configs = array();
         foreach ($paths as $path) {
-            array_push($path_configs, array("condition" => $path, "name" => "URI", "operator" => "REGEX"));
+            array_push($path_configs, array("condition" => $path, "name" => "URI", "operator" => "REGEX", "type" => "html"));
         }
         $helper->flushPaths($path_configs);
 
@@ -235,7 +235,7 @@ class Yottaa_Yottaa_Model_Observer
         // Prepare purge path configs
         $path_configs = array();
         foreach ($paths as $path) {
-            array_push($path_configs, array("condition" => $path, "name" => "URI", "operator" => "REGEX"));
+            array_push($path_configs, array("condition" => $path, "name" => "URI", "operator" => "REGEX", "type" => "html"));
         }
         $helper->flushPaths($path_configs);
 
