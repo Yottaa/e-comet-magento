@@ -29,6 +29,7 @@
 
     <target name="setup" description="Creates all required directories">
         <mkdir dir="${dist.dir}"/>
+        <mkdir dir="${build.dir}"/>
     </target>
 
     <target name="package" depends="clean, setup">
@@ -38,6 +39,8 @@
            </fileset>
 	   </zip>
     </target>
+
+    <target name="dist" depends="package"/>
 
     <target name="dev" depends="clear-cache">
         <copy todir="${magento.location}/app" verbose="true">
@@ -57,6 +60,12 @@
                  password="${scp.magento.password}"
                  trust="true"
                  command="rm -r ${scp.magento.basepath}/var/session/*"
+                 failonerror="false"/>
+        <sshexec host="${scp.magento.host}"
+                 username="${scp.magento.username}"
+                 password="${scp.magento.password}"
+                 trust="true"
+                 command="rm -r ${scp.magento.basepath}/app/LICENSE.txt"
                  failonerror="false"/>
         <sshexec host="${scp.magento.host}"
                  username="${scp.magento.username}"
@@ -90,12 +99,7 @@
                  failonerror="false"/>
     </target>
 
-    <target name="publish" depends="unpublish, setup">
-	   <!-- zip up a distribution that we can ship over -->
-	   <zip destfile="${dist.dir}/dist.zip">
-           <fileset dir="${app.dir}">
-           </fileset>
-	   </zip>
+    <target name="publish" depends="unpublish, setup, package">
        <scp todir="${scp.magento.username}@${scp.magento.host}:${scp.magento.basepath}/app"
             password="${scp.magento.password}"
             trust="true"
