@@ -69,11 +69,19 @@ class Yottaa_Yottaa_Helper_API extends Mage_Core_Helper_Abstract {
 
   /**
    * Constructor
+   *
+   * @param $key API Key
+   * @param $uid User Id
+   * @param $sid Site Id
+   * @param bool $dev_mode Use dev api if true
+   * @param null $partner Custom partner id and partner key
    */
-  public function __construct($key, $uid, $sid, $dev_mode = FALSE) {
+  public function __construct($key, $uid, $sid, $dev_mode = FALSE, $partner = NULL)
+  {
     $this->key = $key;
     $this->uid = $uid;
     $this->sid = $sid;
+
     if ($dev_mode) {
       $this->api = Yottaa_Yottaa_Helper_API::DEV_API;
       $this->partner_id = Yottaa_Yottaa_Helper_API::DEV_PARTNER_ID;
@@ -83,6 +91,15 @@ class Yottaa_Yottaa_Helper_API extends Mage_Core_Helper_Abstract {
       $this->api = Yottaa_Yottaa_Helper_API::PROD_API;
       $this->partner_id = Yottaa_Yottaa_Helper_API::PROD_PARTNER_ID;
       $this->partner_api_key = Yottaa_Yottaa_Helper_API::PROD_PARTNER_API_KEY;
+    }
+
+    if (!empty($partner)) {
+      if (isset($partner["id"])) {
+        $this->partner_id = $partner["id"];
+      }
+      if (isset($partner["key"])) {
+        $this->partner_api_key = $partner["key"];
+      }
     }
   }
 
@@ -192,6 +209,20 @@ class Yottaa_Yottaa_Helper_API extends Mage_Core_Helper_Abstract {
     return $this->call('optimizers/' . $this->sid . '/' . $action , array(
       'user_id' => $this->uid,
     ), 'PUT', $this->key);
+  }
+
+  /**
+   * Transparent optimization.
+   */
+  public function transparent() {
+    return $this->pause('transparent proxy');
+  }
+
+  /**
+   * Bypass optimization.
+   */
+  public function bypass() {
+    return $this->pause();
   }
 
   /**
@@ -454,8 +485,18 @@ class Yottaa_Yottaa_Helper_API extends Mage_Core_Helper_Abstract {
    * @param $status
    * @return bool
    */
-  public function isPaused($status) {
-    return "bypass" == $status || "transparent proxy" == $status;
+  public function isBypass($status) {
+    return "bypass" == $status;
+  }
+
+  /**
+   * Returns true for paused status codes.
+   *
+   * @param $status
+   * @return bool
+   */
+  public function isTransparent($status) {
+    return "transparent proxy" == $status;
   }
 
   /**
@@ -469,7 +510,17 @@ class Yottaa_Yottaa_Helper_API extends Mage_Core_Helper_Abstract {
   }
 
   /**
-   * Returns true for valid status codes for both live and pause.
+   * Returns true for paused status codes.
+   *
+   * @param $status
+   * @return bool
+   */
+  public function isPaused($status) {
+    return $this->isBypass($status) || $this->isTransparent($status);
+  }
+
+  /**
+   * Returns true for valid status codes for both live and paused.
    *
    * @param $status
    * @return bool

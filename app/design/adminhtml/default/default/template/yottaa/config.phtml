@@ -153,44 +153,89 @@
             <table class="form-list" cellspacing="0">
                 <colgroup class=""></colgroup>
                 <tbody>
-
-                <form id="actions_form" name="actions_form" method="post"
-                      action="<?php echo $this->getUrl('*/*/postActions')?>">
-                    <input name="form_key" type="hidden"
-                           value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
                     <tr>
-                        <?php if ($yottaa_is_paused): ?>
                         <td class="">
-                            <button onclick="actionsForm.submit()" class="scalable save" type="button">
-                                <span><?php echo $this->__('Resume Optimizations') ?></span>
-                            </button>
-                            <input name="yottaa_action_key" type="hidden" value="resume"/>
-
-                            <p class="note">
-                                Starting optimization will apply optimizations on your website within 5 minutes.
-                            </p>
+                            <h4>Switch Optimizer Mode</h4>
                         </td>
-                        <?php endif ?>
-                        <?php if ($yottaa_is_live): ?>
-                        <td class="">
-                            <button onclick="actionsForm.submit()" class="scalable save" type="button">
-                                <span><?php echo $this->__('Pause Optimizations') ?></span>
-                            </button>
-                            <input name="yottaa_action_key" type="hidden" value="pause"/>
-
-                            <p class="note">
-                                Activating your site allows all e-commerce visitors to receive the benefits out Yottaa's
-                                site speed optimizer.
-                            </p>
-                        </td>
-                        <?php endif ?>
                     </tr>
+                    <style>
+                        .button-text {
+                            width: 125px;
+                            display: block;
+                            text-align: left;
+                        }
+                    </style>
+                <?php if ($yottaa_is_paused): ?>
+                    <form id="resume_form" name="resume_form" method="post"
+                          action="<?php echo $this->getUrl('*/*/postActions')?>">
+                        <input name="form_key" type="hidden"
+                               value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
+                        <tr>
+                            <td class="">
+                                <button onclick="resumeForm.submit()" class="scalable save" type="button">
+                                    <span class="button-text"><?php echo $this->__('Resume') ?></span>
+                                </button>
+                                <input name="yottaa_action_key" type="hidden" value="resume"/>
 
-                </form>
-                <script type="text/javascript">
-                    var actionsForm = new varienForm('actions_form');
-                </script>
+                                <p class="note">
+                                    Starting optimization will apply optimizations on your website within 5 minutes.
+                                </p>
+                            </td>
+                        </tr>
+                    </form>
+                    <script type="text/javascript">
+                        var resumeForm = new varienForm('resume_form');
+                    </script>
+                <?php endif ?>
+                <?php if ($yottaa_is_live): ?>
+                    <form id="bypass_form" name="bypass_form" method="post"
+                          action="<?php echo $this->getUrl('*/*/postActions')?>">
+                        <input name="form_key" type="hidden"
+                               value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
+
+                        <tr>
+                            <td class="">
+                                <button onclick="bypassForm.submit()" class="scalable save" type="button">
+                                    <span class="button-text"><?php echo $this->__('Bypass') ?></span>
+                                </button>
+                                <input name="yottaa_action_key" type="hidden" value="pause"/>
+
+                                <p class="note">
+                                    In Bypass Mode, Yottaa DNS will route all traffic to your origin server directly, by-passing optimizations, SSL termination and origin server shielding etc. Your origin servers IP address are visible to anyone in this mode.
+                                </p>
+                            </td>
+                        </tr>
+                    </form>
+                    <script type="text/javascript">
+                        var bypassForm = new varienForm('bypass_form');
+                    </script>
+                    <form id="transparent_form" name="transparent_form" method="post"
+                          action="<?php echo $this->getUrl('*/*/postActions')?>">
+                        <input name="form_key" type="hidden"
+                               value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
+                        </tr>
+                        <td class="">
+                            <button onclick="transparentForm.submit()" class="scalable save" type="button">
+                                <span class="button-text"><?php echo $this->__('Transparent Proxy') ?></span>
+                            </button>
+                            <input name="yottaa_action_key" type="hidden" value="transparent"/>
+
+                            <p class="note">
+                                In Transparent Proxy Mode, Yottaa will proxy your site traffic through the Yottaa Network without applying any optimization. Other features such as SSL termination, site protection and Private Test are in effect as usual. Your origin servers IP address are shielded by Yottaa.
+                            </p>
+                        </td>
+                        </tr>
+                    </form>
+                    <script type="text/javascript">
+                        var transparentForm = new varienForm('transparent_form');
+                    </script>
+                <?php endif ?>
                 <?php if ($yottaa_is_valid): ?>
+                    <tr>
+                        <td class="">
+                            <h4>Other Actions</h4>
+                        </td>
+                    </tr>
                     <form id="clear_cache_form" name="clear_cache_form" method="post"
                           action="<?php echo $this->getUrl('*/*/postActions')?>">
                         <input name="form_key" type="hidden"
@@ -198,7 +243,7 @@
                         <tr>
                             <td class="">
                                 <button onclick="clearCacheForm.submit()" class="scalable save" type="button">
-                                    <span><?php echo $this->__('Clear Yottaa Cache') ?></span>
+                                    <span class="button-text"><?php echo $this->__('Clear Yottaa Cache') ?></span>
                                 </button>
                                 <input name="yottaa_action_key" type="hidden" value="clear_cache"/>
 
@@ -217,7 +262,7 @@
                     <tr>
                         <td class="">
                             <button onclick="window.open('<?php echo $yottaa_preview_url ?>', '_blank');" class="scalable save" type="button">
-                                <span><?php echo $this->__('Activate Optimizations') ?></span>
+                                <span class="button-text"><?php echo $this->__('Activate Optimizations') ?></span>
                             </button>
                             <p class="note">
                                 Activating your site allows all e-commerce visitors to receive the benefits out Yottaa's site speed optimizer.

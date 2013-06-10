@@ -197,12 +197,20 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                     Mage::getSingleton('adminhtml/session')->addError('Error received from resuming Yottaa optimizer:' . json_encode($error));
                 }
             } else if ($yottaa_action_key == 'pause') {
-                $json_output = $helper->pause();
+                $json_output = $helper->bypass();
                 if (!isset($json_output["error"])) {
-                    Mage::getSingleton('adminhtml/session')->addSuccess('Your Yottaa optimizer has been paused.');
+                    Mage::getSingleton('adminhtml/session')->addSuccess('Your Yottaa optimizer has been changed to bypass mode.');
                 } else {
                     $error = $json_output["error"];
-                    Mage::getSingleton('adminhtml/session')->addError('Error received from pausing Yottaa optimizer:' . json_encode($error));
+                    Mage::getSingleton('adminhtml/session')->addError('Error received from changing Yottaa optimizer to bypass mode:' . json_encode($error));
+                }
+            } else if ($yottaa_action_key == 'transparent') {
+                $json_output = $helper->transparent();
+                if (!isset($json_output["error"])) {
+                    Mage::getSingleton('adminhtml/session')->addSuccess('Your Yottaa optimizer has been changed to transparent proxy mode.');
+                } else {
+                    $error = $json_output["error"];
+                    Mage::getSingleton('adminhtml/session')->addError('Error received from changing Yottaa optimizer to transparent proxy mode:' . json_encode($error));
                 }
             } else if ($yottaa_action_key == 'clear_cache') {
                 $json_output = $helper->flush();
