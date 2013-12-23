@@ -58,7 +58,9 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
 
                 if (!isset($json_output2["error"])) {
                     $config->assign('yottaa_settings_status', 'ok');
+                    /*
                     $config->assign('yottaa_settings_home_page_caching', $json_output2["home_page_caching"]);
+                    */
                     $config->assign('yottaa_settings_site_pages_caching', $json_output2["site_pages_caching"]);
                     $config->assign('yottaa_settings_admin_pages_caching', $json_output2["admin_pages_caching"]);
                     $config->assign('yottaa_settings_checkout_pages_caching', $json_output2["checkout_pages_caching"]);

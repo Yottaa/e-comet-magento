@@ -43,7 +43,7 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
             $admin_pages_key = "/admin";
             $checkout_pages_key = "/checkout";
 
-            $home_page_caching = 'unknown';
+            // $home_page_caching = 'unknown';
             $site_pages_caching = 'unknown';
             $admin_pages_caching = 'unknown';
             $checkout_pages_caching = 'unknown';
@@ -110,6 +110,7 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
                 }
             }
 
+            /*
             if (isset($json_output["resourceRules"])) {
                 $resourceRules = $json_output["resourceRules"];
                 foreach ($resourceRules as &$resourceRule) {
@@ -127,6 +128,12 @@ class Yottaa_Yottaa_Helper_Data extends Yottaa_Yottaa_Helper_API
                          'checkout_pages_caching' => $checkout_pages_caching,
                          'only_cache_anonymous_users' => $only_cache_anonymous_users,
                          'exclusions' => $exclusions);
+            */
+            return array('site_pages_caching' => $site_pages_caching,
+                'admin_pages_caching' => $admin_pages_caching,
+                'checkout_pages_caching' => $checkout_pages_caching,
+                'only_cache_anonymous_users' => $only_cache_anonymous_users,
+                'exclusions' => $exclusions);
         } else {
             return $json_output;
         }
