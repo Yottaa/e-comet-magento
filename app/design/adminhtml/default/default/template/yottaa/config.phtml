@@ -257,6 +257,31 @@
                     <script type="text/javascript">
                         var clearCacheForm = new varienForm('clear_cache_form');
                     </script>
+                    <form id="purge_cache_form" name="purge_cache_form" method="post"
+                          action="<?php echo $this->getUrl('*/*/postActions')?>">
+                        <input name="form_key" type="hidden"
+                               value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>"/>
+                        <tr>
+                            <td class="">
+                                <textarea rows="5" cols="60" class="textarea" name="paths"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="">
+                                <button onclick="purgeCacheForm.submit()" class="scalable save" type="button">
+                                    <span class="button-text"><?php echo $this->__('Purge Yottaa Cache') ?></span>
+                                </button>
+                                <input name="yottaa_action_key" type="hidden" value="purge_cache"/>
+
+                                <p class="note">
+                                    Purge Yottaa cache items based on provided regular expressions (enter one regular expression for each line).
+                                </p>
+                            </td>
+                        </tr>
+                    </form>
+                    <script type="text/javascript">
+                        var purgeCacheForm = new varienForm('purge_cache_form');
+                    </script>
                 <?php endif ?>
                 <?php if ($yottaa_status == 'preview'): ?>
                     <tr>

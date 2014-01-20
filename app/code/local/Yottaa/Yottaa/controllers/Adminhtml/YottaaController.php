@@ -223,6 +223,27 @@ class Yottaa_Yottaa_Adminhtml_YottaaController extends Mage_Adminhtml_Controller
                     $error = $json_output["error"];
                     Mage::getSingleton('adminhtml/session')->addError('Error received from clearing Yottaa cache:' . json_encode($error));
                 }
+            } else if ($yottaa_action_key == 'purge_cache') {
+                $paths_string = $post["paths"];
+                $paths = Mage::helper('core/string')->splitWords($paths_string, true, 0 , "/\\r\\n|\\r|\\n/");
+
+                $path_configs = array();
+                foreach ($paths as $path) {
+                     array_push($path_configs, array(
+                            "condition" => $path,
+                            "name" => "URI",
+                            "operator" => "REGEX",
+                            "type" => "html",
+                          ));
+                }
+                $json_output = $helper->flushPaths($path_configs);
+                $helper->log("Output from purging cache :" . json_encode($json_output));
+                if (!isset($json_output["error"])) {
+                    Mage::getSingleton('adminhtml/session')->addSuccess('Your Yottaa cache has been purged.');
+                } else {
+                    $error = $json_output["error"];
+                    Mage::getSingleton('adminhtml/session')->addError('Error received from purginging Yottaa cache:' . json_encode($error));
+                }
             }
 
         } catch (Exception $e) {
