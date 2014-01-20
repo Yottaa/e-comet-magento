@@ -336,24 +336,25 @@ class Yottaa_Yottaa_Model_Observer
         $configs = $observer->getEvent()->getObject();
         $groups = $configs->getGroups();
         if (empty($groups) || empty($groups["yottaa_group"])) {
-            Mage::throwException("Failed to locate the config data for Yottaa.");
-        }
-        $fields = $groups["yottaa_group"]["fields"];
-        if (empty($fields)) {
-            Mage::throwException("Failed to locate the config data for Yottaa.");
-        }
-        $sid = $fields["yottaa_site_id"]["value"];
-        $uid = $fields["yottaa_user_id"]["value"];
-        $key = $fields["yottaa_api_key"]["value"];
-        $url = Mage::helper("adminhtml")->getUrl("adminhtml/yottaa/");
-        if (empty($sid) && empty($uid) && empty($key)) {
-            Mage::getSingleton('core/session')->addNotice('Visit <a href="' . $url .'">Yottaa Page</a> to create a new account.');
+            // Mage::throwException("Failed to locate the config data for Yottaa.");
         } else {
-            $json_output = $helper->getRuntimeStatus($key, $uid, $sid);
-            if (isset($json_output["error"])) {
-                Mage::throwException("Invalid combination of api key, user id and site id.");
+            $fields = $groups["yottaa_group"]["fields"];
+            if (empty($fields)) {
+                Mage::throwException("Failed to locate the config data for Yottaa.");
+            }
+            $sid = $fields["yottaa_site_id"]["value"];
+            $uid = $fields["yottaa_user_id"]["value"];
+            $key = $fields["yottaa_api_key"]["value"];
+            $url = Mage::helper("adminhtml")->getUrl("adminhtml/yottaa/");
+            if (empty($sid) && empty($uid) && empty($key)) {
+                Mage::getSingleton('core/session')->addNotice('Visit <a href="' . $url .'">Yottaa Page</a> to create a new account.');
             } else {
-                Mage::getSingleton('core/session')->addSuccess('Visit <a href="' . $url .'">Yottaa Page</a> for more options.');
+                $json_output = $helper->getRuntimeStatus($key, $uid, $sid);
+                if (isset($json_output["error"])) {
+                    Mage::throwException("Invalid combination of api key, user id and site id.");
+                } else {
+                    Mage::getSingleton('core/session')->addSuccess('Visit <a href="' . $url .'">Yottaa Page</a> for more options.');
+                }
             }
         }
         return $this;
